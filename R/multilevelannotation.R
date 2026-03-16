@@ -47,6 +47,8 @@ function(
     paste(parts, collapse="|")
   }
   
+  
+  
   parallel:::setDefaultClusterOptions(setup_strategy="sequential")
   WGCNA::allowWGCNAThreads(nThreads=num_nodes)
   
@@ -171,7 +173,7 @@ function(
             value = NA)
       }
     }
-    setDT(dataA)
+    data.table::setDT(dataA)
     dataA <- unique(dataA, by = c("mz","time"))
     mzid <- sprintf("%.5f_%.2f", dataA$mz, dataA$time)
     
@@ -323,7 +325,7 @@ function(
                                   use.names=TRUE, fill=TRUE))
           
         }else{
-          
+Annotation          
           if (use_wgcna_clust) {
             # ------------------------------------------------------------------
             # COMPUTE GLOBAL CORRELATION (needed by scorer in Steps 3+)
@@ -437,7 +439,7 @@ function(
     # ------------------------------------------------------------------
     # LOAD DATABASE
     # ------------------------------------------------------------------
-    chemCompMZ <- .load_db(db_name, customDB, adduct_names, adduct_table,
+    chemCompMZ <- load_db(db_name, customDB, adduct_names, adduct_table,
                            customIDs, biofluid.location, origin, status,
                            HMDBselect)
     
@@ -508,14 +510,20 @@ function(
       # PASS 2A: PRIMARY ADDUCTS
       # ----------------------------------------------------------------
       print("=== Step 2A: Primary adduct annotation ===")
+      chemCompMZ$mz <- suppressWarnings(as.numeric(chemCompMZ$mz))
+      
+      chemCompMZ <- chemCompMZ[is.finite(chemCompMZ$mz), ]
+      
+      chemCompMZ <- chemCompMZ[order(chemCompMZ$mz), ]
+      
       levelB_primary <- .run_annotation_pass(
         dataA_pass      = levelA_res,
         chemCompMZ_pass = chemCompMZ,
         pass_adducts    = primary_adducts,
         max.mz.diff     = max.mz.diff)
       
-      setDT(levelB_primary)
-      setDT(levelA_res)
+      data.table::setDT(levelB_primary)
+      data.table::setDT(levelA_res)
       levelB_primary <- merge(
         levelB_primary,
         levelA_res[, .(mz, time, Module_RTclust)],
@@ -618,8 +626,8 @@ function(
       # ----------------------------------------------------------------
       if (!is.null(levelB_secondary)) {
         #levelB_res <- unique(rbind(levelB_primary, levelB_secondary))
-        setDT(levelB_secondary)
-        setDT(levelA_res)
+        data.table::setDT(levelB_secondary)
+        data.table::setDT(levelA_res)
         levelB_secondary <- merge(
           levelB_secondary,
           levelA_res[, .(mz, time, Module_RTclust)],
@@ -631,11 +639,11 @@ function(
         # print(colnames(levelB_secondary))
         all_cols <- union(names(levelB_primary), names(levelB_secondary))
         
-        setcolorder(levelB_primary, all_cols[all_cols %in% names(levelB_primary)])
-        setcolorder(levelB_secondary, all_cols[all_cols %in% names(levelB_secondary)])
+        data.table::setcolorder(levelB_primary, all_cols[all_cols %in% names(levelB_primary)])
+        data.table::setcolorder(levelB_secondary, all_cols[all_cols %in% names(levelB_secondary)])
         
         levelB_res <- unique(
-          rbindlist(
+          data.table::rbindlist(
             list(levelB_primary, levelB_secondary),
             use.names = TRUE,
             fill = TRUE

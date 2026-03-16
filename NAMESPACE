@@ -78,5 +78,7 @@ export(
   run_cpp_metabolomics_engine,
   run_ultra_annotation_engine,
   simple_xms_conf_fast,
-  simpleAnnotation
+  expand_isotopes_ultra_fast_cpp,
+  simpleAnnotation,
+  load_db
 )
