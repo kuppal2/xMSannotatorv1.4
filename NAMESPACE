@@ -1,14 +1,31 @@
-export("get_brite_res", "get_kegg_map", "get_mz_by_KEGGcompoundIDs",
-       "get_mz_by_KEGGdrugIDs", "get_mz_by_KEGGpathwayIDs",
-       "get_mz_by_KEGGspecies", "get_mz_by_monoisotopicmass",
-       "get_peak_blocks_modulesvhclust", "getturnpoints",
-       "group_by_rt_histv1", "group_by_rt_linear",
-       "multilevelannotation", "multilevelannotationstep3",
-       "multilevelannotationstep5", "prepare_stage3_hybrid",
-       "run_cpp_metabolomics_engine", "run_ultra_annotation_engine",
-       "simple_xms_conf_fast", "simpleAnnotation")
-importFrom(data.table,set)
-importFrom(data.table,setDT)
-importFrom(data.table,uniqueN)
-importFrom(data.table,fread)
-importFrom(data.table,fwrite)
+useDynLib(xMSannotator, .registration = TRUE)
+
+importFrom(Rcpp, evalCpp)
+
+export(
+  get_brite_res,
+  get_kegg_map,
+  get_mz_by_KEGGcompoundIDs,
+  get_mz_by_KEGGdrugIDs,
+  get_mz_by_KEGGpathwayIDs,
+  get_mz_by_KEGGspecies,
+  get_mz_by_monoisotopicmass,
+  get_peak_blocks_modulesvhclust,
+  getturnpoints,
+  group_by_rt_histv1,
+  group_by_rt_linear,
+  multilevelannotation,
+  multilevelannotationstep3,
+  multilevelannotationstep5,
+  prepare_stage3_hybrid,
+  run_cpp_metabolomics_engine,
+  run_ultra_annotation_engine,
+  simple_xms_conf_fast,
+  simpleAnnotation
+)
+
+importFrom(data.table, set)
+importFrom(data.table, setDT)
+importFrom(data.table, uniqueN)
+importFrom(data.table, fread)
+importFrom(data.table, fwrite)

@@ -16,10 +16,10 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 4.2)
+    R (>= 4.2),
+    RcppParallel
 Imports:
     Rcpp,
-    RcppParallel,
     data.table,
     igraph,
     WGCNA,
