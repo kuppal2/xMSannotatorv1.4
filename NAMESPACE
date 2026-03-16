@@ -32,6 +32,10 @@ importFrom(KEGGREST, keggList)
 
 # WGCNA
 importFrom(WGCNA, allowWGCNAThreads)
+importFrom(WGCNA, adjacency)
+importFrom(WGCNA, allowWGCNAThreads)
+importFrom(WGCNA, TOMsimilarity)
+importFrom(WGCNA, softConnectivity)
 
 # plyr
 importFrom(plyr, ddply)
