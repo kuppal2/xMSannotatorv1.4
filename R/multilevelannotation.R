@@ -19,7 +19,7 @@ function(
     isotopes_losses_fragments_transformations=NA,
     clustmethod="auto",
     require_primary_adduct=FALSE,annotation_mode=c("onepass","twopass_moduleschemical_with_primary_hits"),
-    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA)   # v2.2.1: gate Confidence>0 on primary adduct presence
+    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA)
 {
   options(warn=-1)
 
@@ -103,7 +103,7 @@ function(
 
   data(adduct_table)
 
-  print(paste("Annotating using", db_name, "database:"))
+  print(paste("Annotating using", db_name, "database"))
 
   max_diff_rt <- max.rt.diff
   cutheight   <- 1 - corthresh
@@ -183,6 +183,7 @@ function(
     #mzid <- paste(dataA$mz, dataA$time, sep="_")
     dataA <- unique(dataA)
     mean_int_vec <- rowMeans(dataA[, -c(1L:2L)], na.rm=TRUE)
+    print("Input data dimension:")
     print(dim(dataA))
 
     if (length(check_levelA) < 1L) {
@@ -849,9 +850,22 @@ function(
 
     print("Status 1: Skipping step 1.")
     print("Status 2: Using existing step1_results.Rda file.")
+
+    if (interactive()) {
+
+      ans <- readline("Cached results detected. Reuse them? (y/n): ")
+
+      if (tolower(ans) != "y") {
+        stop("User aborted execution to avoid using cached results.")
+      }
+
+    }
+
     allsteps_temp <- allsteps
-    load(file.path(outloc,"tempobjects.Rda"))
-    load(file.path(outloc,"step1_results.Rda"))
+
+    load(file.path(outloc, "tempobjects.Rda"))
+    load(file.path(outloc, "step1_results.Rda"))
+
     allsteps <- allsteps_temp
   }
 
