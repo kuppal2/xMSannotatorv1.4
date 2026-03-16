@@ -325,7 +325,7 @@ function(
                                   use.names=TRUE, fill=TRUE))
 
         }else{
-Annotation
+
           if (use_wgcna_clust) {
             # ------------------------------------------------------------------
             # COMPUTE GLOBAL CORRELATION (needed by scorer in Steps 3+)
@@ -1208,7 +1208,7 @@ Annotation
     stage3a<-fread(file.path(outloc,"Stage3A.csv"))
 
     annotresstage3A<-merge(peakID_mz_time, stage3a,by=c("mz","time"))
-    write.csv(annotresstage3A,file=file.path(outloc,"Stage3A.csv"),row.names=FALSE)
+    write.csv(annotresstage3A,file="Stage3A.csv",row.names=FALSE)
 
     stage3b<-fread(file.path(outloc,"Stage3B.csv"))
 
