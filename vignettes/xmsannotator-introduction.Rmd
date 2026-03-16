@@ -16,14 +16,19 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(xMSannotator)
-data <- read.csv(system.file(
+
+#read sample data
+testdata <- read.csv(system.file(
   "extdata",
   "example_data_table.csv",
   package = "xMSannotator"
 ))
 
-res <- multilevelannotation(data)
+#call multilevelannotation function
+res <- multilevelannotation(testdata[,c(1:15)])
 
+#returns a list with stage 4 and stage 5 results
+print(names(res))
 
 ```
 
