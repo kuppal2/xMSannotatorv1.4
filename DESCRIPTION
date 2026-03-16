@@ -20,9 +20,11 @@ Depends:
     RcppParallel
 Imports:
     Rcpp,
+    RcppParallel,
     data.table,
     igraph,
     WGCNA,
+    dynamicTreeCut,
     foreach,
     plyr,
     KEGGREST,
