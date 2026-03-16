@@ -1,18 +1,40 @@
 Package: xMSannotator
 Type: Package
-Title: xMSannotator: R package for network based annotation of metabolomics data.
+Title: Network-Based Annotation of Untargeted Metabolomics Data
 Version: 1.4.0
 Date: 2026-03-15
-Authors@R: person("Karan","Uppal", role=c("aut","cre"), email="kuppal3gt@gmail.com")
-Description: xMSannotator includes functions for metabolite annotation using HMDB, KEGG, LipidMaps, T3DB,  and user provided custom databases. The package also includes utilites for querying KEGG using the REST interface.
+Authors@R: 
+    person("Karan", "Uppal",
+           email = "kuppal3gt@gmail.com",
+           role = c("aut", "cre"))
+Description: Provides algorithms for metabolite annotation using
+    correlation networks, isotope patterns, and database matching.
+    The package supports annotation using HMDB, KEGG, LipidMaps,
+    T3DB, and user-defined databases, and includes utilities for
+    querying KEGG through the REST API.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-LinkingTo: Rcpp, RcppParallel
-Depends: WGCNA, parallel, igraph, foreach, plyr, RcppParallel,Rcpp, KEGGREST, flashClust, Rdisop, data.table
-RoxygenNote: 7.3.2
-Roxygen: list(markdown = TRUE)
+Depends:
+    R (>= 4.2)
+Imports:
+    Rcpp,
+    RcppParallel,
+    data.table,
+    igraph,
+    WGCNA,
+    foreach,
+    plyr,
+    KEGGREST,
+    flashClust,
+    Rdisop,
+    parallel
+LinkingTo:
+    Rcpp,
+    RcppParallel
 SystemRequirements: C++17
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
 Suggests:
     knitr,
     rmarkdown

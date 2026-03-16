@@ -2,7 +2,7 @@ multilevelannotation <-
 function(
     dataA, max.mz.diff=10, max.rt.diff=10, cormethod="pearson",
     num_nodes=2, queryadductlist=c("all"),
-    gradienttype="Acetonitrile", mode="pos", outloc, db_name="HMDB",
+    gradienttype="Acetonitrile", mode="pos", outloc=getwd(), db_name="HMDB",
     adduct_weights=NA, num_sets=3000, allsteps=TRUE,
     corthresh=0.7, NOPS_check=TRUE, customIDs=NA,
     missing.value=NA, deepsplit=2, networktype="unsigned",
@@ -48,7 +48,7 @@ function(
   }
   
   parallel:::setDefaultClusterOptions(setup_strategy="sequential")
-  allowWGCNAThreads(nThreads=num_nodes)
+  WGCNA::allowWGCNAThreads(nThreads=num_nodes)
   
   annotation_mode=annotation_mode[1]
   

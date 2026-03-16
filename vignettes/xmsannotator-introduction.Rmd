@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 library(xMSannotator)
 data <- read.csv(system.file(
   "extdata",
-  "example_peak_table.csv",
+  "example_data_table.csv",
   package = "xMSannotator"
 ))
 
