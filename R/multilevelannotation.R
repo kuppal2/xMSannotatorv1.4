@@ -1198,32 +1198,32 @@ Annotation
     stage1<-fread(file.path(outloc,"Stage1.csv"))
 
     annotresstage1<-merge(peakID_mz_time, stage1,by=c("mz","time"))
-    write.csv(annotresstage1,file="Stage1.csv",row.names=FALSE)
+    write.csv(annotresstage1,file=file.path(outloc,"Stage1.csv"),row.names=FALSE)
 
     stage2<-fread(file.path(outloc,"Stage2.csv"))
 
     annotresstage2<-merge(peakID_mz_time, stage2,by=c("mz","time"))
-    write.csv(annotresstage2,file="Stage2.csv",row.names=FALSE)
+    write.csv(annotresstage2,file=file.path(outloc,"Stage2.csv"),row.names=FALSE)
 
     stage3a<-fread(file.path(outloc,"Stage3A.csv"))
 
     annotresstage3A<-merge(peakID_mz_time, stage3a,by=c("mz","time"))
-    write.csv(annotresstage3A,file="Stage3A.csv",row.names=FALSE)
+    write.csv(annotresstage3A,file=file.path(outloc,"Stage3A.csv"),row.names=FALSE)
 
     stage3b<-fread(file.path(outloc,"Stage3B.csv"))
 
     annotresstage3B<-merge(peakID_mz_time, stage3b,by=c("mz","time"))
-    write.csv(annotresstage3B,file="Stage3B.csv",row.names=FALSE)
+    write.csv(annotresstage3B,file=file.path(outloc,"Stage3B.csv"),row.names=FALSE)
 
     stage4<-fread(file.path(outloc,"Stage4.csv"))
 
     annotresstage4<-merge(peakID_mz_time, stage4,by=c("mz","time"))
-    write.csv(annotresstage4,file="Stage4_curated.csv",row.names=FALSE)
+    write.csv(annotresstage4,file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
 
     stage5<-fread(file.path(outloc,"Stage5.csv"))
 
     annotresstage5<-merge(peakID_mz_time, stage5,by=c("mz","time"))
-    write.csv(annotresstage5,file="Stage5.csv",row.names=FALSE)
+    write.csv(annotresstage5,file=file.path(outloc,"Stage5.csv"),row.names=FALSE)
 
   }
 
