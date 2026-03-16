@@ -1,3 +1,4 @@
+// [[Rcpp::plugins(cpp17)]]
 // [[Rcpp::depends(RcppParallel)]]
 
 #include <Rcpp.h>
