@@ -2,6 +2,43 @@ useDynLib(xMSannotator, .registration = TRUE)
 
 importFrom(Rcpp, evalCpp)
 
+# data.table
+importFrom(data.table, set)
+importFrom(data.table, setDT)
+importFrom(data.table, uniqueN)
+importFrom(data.table, fread)
+importFrom(data.table, fwrite)
+importFrom(data.table, as.data.table)
+importFrom(data.table, fifelse)
+
+# clustering
+importFrom(dynamicTreeCut, cutreeDynamic)
+
+# igraph
+importFrom(igraph, graph_from_data_frame)
+importFrom(igraph, cluster_leiden)
+importFrom(igraph, cluster_louvain)
+importFrom(igraph, cluster_label_prop)
+importFrom(igraph, E)
+
+# parallel / foreach
+importFrom(foreach, foreach)
+importFrom(parallel, mclapply)
+importFrom(parallel, detectCores)
+
+# KEGG
+importFrom(KEGGREST, keggGet)
+importFrom(KEGGREST, keggList)
+
+# WGCNA
+importFrom(WGCNA, allowWGCNAThreads)
+
+# plyr
+importFrom(plyr, ddply)
+
+# Rdisop
+importFrom(Rdisop, getMolecule)
+
 export(
   get_brite_res,
   get_kegg_map,
@@ -23,9 +60,3 @@ export(
   simple_xms_conf_fast,
   simpleAnnotation
 )
-
-importFrom(data.table, set)
-importFrom(data.table, setDT)
-importFrom(data.table, uniqueN)
-importFrom(data.table, fread)
-importFrom(data.table, fwrite)
