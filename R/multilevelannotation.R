@@ -1220,7 +1220,7 @@ Annotation
     annotresstage4<-merge(peakID_mz_time, stage4,by=c("mz","time"))
     write.csv(annotresstage4,file="Stage4_curated.csv",row.names=FALSE)
 
-    stage5<-fread("Stage5.csv")
+    stage5<-fread(file.path(outloc,"Stage5.csv"))
 
     annotresstage5<-merge(peakID_mz_time, stage5,by=c("mz","time"))
     write.csv(annotresstage5,file="Stage5.csv",row.names=FALSE)
