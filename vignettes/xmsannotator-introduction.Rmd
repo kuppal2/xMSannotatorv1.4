@@ -25,7 +25,7 @@ testdata <- read.csv(system.file(
 ))
 
 #call multilevelannotation function
-res <- multilevelannotation(testdata[,c(1:15)])
+res <- multilevelannotation(testdata[,c(1:15)],max.mz.diff=10,max.rt.diff = 10,mode="pos",db_name = "HMDB",clustmethod = "auto",outloc="~/xMSannotatoroutv1.4/")
 
 #returns a list with stage 4 and stage 5 results
 print(names(res))
