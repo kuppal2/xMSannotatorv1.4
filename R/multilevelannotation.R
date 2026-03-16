@@ -834,7 +834,12 @@ function(
 
 
 
-
+    dataset_fp <- paste(
+      nrow(dataA),
+      round(sum(dataA$mz), 3),
+      round(sum(dataA$time), 3),
+      sep = "_"
+    )
 
     rm(mchemdata); rm(chemids); rm(mzid); try(rm(global_cor), silent=TRUE)
     rm(isop_res_md); rm(level_module_isop_annot); rm(dataA)
@@ -894,12 +899,7 @@ function(
     }
 
 
-    dataset_fp <- paste(
-      nrow(dataA),
-      round(sum(dataA$mz), 3),
-      round(sum(dataA$time), 3),
-      sep = "_"
-    )
+
 
     .fp3_current    <- .xms_fingerprint(dataset_fp,max.mz.diff,
                                         max.rt.diff,
