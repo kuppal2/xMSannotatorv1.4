@@ -52,8 +52,6 @@ importFrom(plyr, ddply)
 importFrom(Rdisop, getMolecule)
 
 # stats
-importFrom(stats, cor)
-importFrom(stats, as.dist)
 importFrom(stats, sd)
 importFrom(stats, IQR)
 
