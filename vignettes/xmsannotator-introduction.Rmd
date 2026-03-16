@@ -1,0 +1,26 @@
+---
+title: "xmsannotator-introduction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{xmsannotator-introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(xMSannotator)
+data <- read.csv(system.file(
+  "extdata",
+  "example_peak_table.csv",
+  package = "xMSannotator"
+))
+
+res <- multilevelannotation(data)
+```
