@@ -3,7 +3,6 @@ function(stage3_results,
                                  filter.by = "M+H",
                                  max_diff_rt = 10){
 
-  library(data.table)
 
   DT <- as.data.table(stage3_results)
 
