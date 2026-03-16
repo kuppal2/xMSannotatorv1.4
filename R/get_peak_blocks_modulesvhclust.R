@@ -43,7 +43,7 @@ function(
   # ------------------------------------------------------------------
   powers    <- c(1:10, seq(12, 20, 2))
   set.seed(555)
-  sft       <- try(pickSoftThreshold(data=data_m, dataIsExpr=TRUE,
+  sft       <- try(WGCNA::pickSoftThreshold(data=data_m, dataIsExpr=TRUE,
                                      powerVector=powers, verbose=0),
                    silent=TRUE)
   power_val <- if (inherits(sft, "try-error") || is.na(sft$powerEstimate))
@@ -54,7 +54,7 @@ function(
   # Falls back to stepwise TOM + flashClust if blockwiseModules fails.
   # ------------------------------------------------------------------
   set.seed(555)
-  net <- try(blockwiseModules(
+  net <- try(WGCNA::blockwiseModules(
     datExpr              = data_m,
     checkMissingData     = FALSE,
     blocks               = mycl_metabs,
@@ -98,24 +98,24 @@ function(
     # Stepwise fallback: adjacency -> TOM -> flashClust -> cutreeDynamic
     if (!adjacencyfromsimilarity) {
       set.seed(555)
-      sft2 <- try(pickSoftThreshold(data=data_m, dataIsExpr=TRUE,
+      sft2 <- try(WGCNA::pickSoftThreshold(data=data_m, dataIsExpr=TRUE,
                                     powerVector=powers, verbose=0), silent=TRUE)
       power_val <- if (inherits(sft2, "try-error") || is.na(sft2$powerEstimate))
         6L else sft2$powerEstimate
       ADJ <- if (cormethod == "pearson")
-        adjacency(datExpr=data_m, type=networktype,
+        WGCNA::adjacency(datExpr=data_m, type=networktype,
                   power=power_val, corOptions="use = 'p'")
       else
-        adjacency(datExpr=data_m, type=networktype,
+        WGCNA::adjacency(datExpr=data_m, type=networktype,
                   power=power_val,
                   corOptions="use = 'p', method = 'spearman'")
     } else {
-      sft2 <- try(pickSoftThreshold.fromSimilarity(
+      sft2 <- try(WGCNA::pickSoftThreshold.fromSimilarity(
         similarity=simmat, powerVector=powers, verbose=0),
         silent=TRUE)
       power_val <- if (inherits(sft2, "try-error") || is.na(sft2$powerEstimate))
         6L else sft2$powerEstimate
-      ADJ <- adjacency.fromSimilarity(similarity=simmat,
+      ADJ <- WGCNA::adjacency.fromSimilarity(similarity=simmat,
                                       power=power_val, type=networktype)
     }
     
@@ -123,18 +123,18 @@ function(
     if (length(dup_idx) > 0)
       ADJ <- ADJ[-dup_idx, -dup_idx, drop=FALSE]
     
-    TOM  <- TOMdist(ADJ)
+    TOM  <- WGCNA::TOMdist(ADJ)
     set.seed(555)
-    hier <- flashClust(as.dist(TOM), method="complete")
+    hier <- flashClust::flashClust(as.dist(TOM), method="complete")
     set.seed(555)
-    clust <- cutreeDynamic(hier, distM=TOM, deepSplit=deepsplit,
+    clust <- dynamicTreeCut::cutreeDynamic(hier, distM=TOM, deepSplit=deepsplit,
                            minClusterSize=minclustsize,
                            pamRespectsDendro=FALSE, pamStage=FALSE)
     
     l2 <- levels(as.factor(clust))
     if (length(l2) > 1) {
       set.seed(555)
-      merged <- try(mergeCloseModules(data_m, colors=clust,
+      merged <- try(WGCNA::mergeCloseModules(data_m, colors=clust,
                                       cutHeight=cutheight), silent=TRUE)
       mod_list <- if (inherits(merged, "try-error"))
         as.integer(clust)

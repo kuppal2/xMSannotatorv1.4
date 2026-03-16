@@ -10,9 +10,13 @@ importFrom(data.table, fread)
 importFrom(data.table, fwrite)
 importFrom(data.table, as.data.table)
 importFrom(data.table, fifelse)
+importFrom(data.table, rbindlist)
+importFrom(data.table, setorder)
+importFrom(data.table, setcolorder)
 
 # clustering
 importFrom(dynamicTreeCut, cutreeDynamic)
+importFrom(flashClust,flashClust)
 
 # igraph
 importFrom(igraph, graph_from_data_frame)
@@ -21,8 +25,7 @@ importFrom(igraph, cluster_louvain)
 importFrom(igraph, cluster_label_prop)
 importFrom(igraph, E)
 
-# parallel / foreach
-importFrom(foreach, foreach)
+# parallel
 importFrom(parallel, mclapply)
 importFrom(parallel, detectCores)
 
@@ -33,15 +36,30 @@ importFrom(KEGGREST, keggList)
 # WGCNA
 importFrom(WGCNA, allowWGCNAThreads)
 importFrom(WGCNA, adjacency)
-importFrom(WGCNA, allowWGCNAThreads)
+importFrom(WGCNA, adjacency.fromSimilarity)
 importFrom(WGCNA, TOMsimilarity)
 importFrom(WGCNA, softConnectivity)
+importFrom(WGCNA, cor)
+importFrom(WGCNA, TOMdist)
+importFrom(WGCNA, blockwiseModules)
+importFrom(WGCNA, pickSoftThreshold)
+importFrom(WGCNA, mergeCloseModules)
 
 # plyr
 importFrom(plyr, ddply)
 
 # Rdisop
 importFrom(Rdisop, getMolecule)
+
+# stats
+importFrom(stats, cor)
+importFrom(stats, as.dist)
+importFrom(stats, sd)
+importFrom(stats, IQR)
+
+# utils
+importFrom(utils, write.csv)
+importFrom(utils, read.csv)
 
 export(
   get_brite_res,

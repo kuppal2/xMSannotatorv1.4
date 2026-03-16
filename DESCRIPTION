@@ -30,7 +30,8 @@ Imports:
     KEGGREST,
     flashClust,
     Rdisop,
-    parallel
+    parallel,
+    fastcluster
 LinkingTo:
     Rcpp,
     RcppParallel

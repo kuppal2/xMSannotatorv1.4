@@ -366,7 +366,7 @@ function(
             gc()
             
             set.seed(555)
-            mycl_metabs <- cutreeDynamic(
+            mycl_metabs <- dynamicTreeCut::cutreeDynamic(
               hr,
               deepSplit=deepsplit,
               minClusterSize=round(0.1 * length(mzid)),
