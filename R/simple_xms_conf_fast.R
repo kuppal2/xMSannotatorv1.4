@@ -112,11 +112,11 @@ function(stage3_results,
   cat("Stage 4 confidence distribution (unique chemical IDs)\n")
   print(chem_conf[, .N, by = Confidence][order(-Confidence)])
   
-  write.csv(cluster_summary,file="Stage4_cluster_summary.csv",row.names=FALSE)
+  write.csv(cluster_summary,file=file.path(outloc,"Stage4_cluster_summary.csv"),row.names=FALSE)
   
   
   
-  write.csv(curated_res%>%as.data.frame(),file="Stage4_curated.csv",row.names=FALSE)
+  write.csv(curated_res%>%as.data.frame(),file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
   
   
   return(list(

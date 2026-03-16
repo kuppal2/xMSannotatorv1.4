@@ -23,6 +23,30 @@ function(
 {
   options(warn=-1)
   
+  .xms_read_fp <- function(fp_file) {
+    if (file.exists(fp_file)) readLines(fp_file, warn = FALSE)[1L] else ""
+  }
+  
+  .xms_write_fp <- function(fp_file, fp) {
+    writeLines(as.character(fp), fp_file)
+  }
+  
+  .xms_fingerprint <- function(...) {
+    
+    args <- list(...)
+    
+    normalize <- function(x) {
+      if (is.null(x)) return("NULL")
+      if (length(x) == 0) return("EMPTY")
+      if (all(is.na(x))) return("NA")
+      paste(as.character(x), collapse=",")
+    }
+    
+    parts <- vapply(args, normalize, character(1))
+    
+    paste(parts, collapse="|")
+  }
+  
   parallel:::setDefaultClusterOptions(setup_strategy="sequential")
   allowWGCNAThreads(nThreads=num_nodes)
   
@@ -126,7 +150,7 @@ function(
   adduct_names <- unique(adduct_names)
   
   suppressWarnings(dir.create(outloc))
-  setwd(outloc)
+  #setwd(outloc)
   
   outloc_allres <- outloc
   
@@ -383,18 +407,19 @@ function(
           }
         }
       }
-      setwd(outloc_allres)
-      save(levelA_res, file="xMSannotator_levelA_modules.Rda")
+      #setwd(outloc_allres)
+      save(levelA_res, file=file.path(outloc,"xMSannotator_levelA_modules.Rda"))
       rm(global_cor)
       
       
       
-      write.csv(levelA_res, file="Stage1.csv", row.names=FALSE)
+      write.csv(levelA_res, file=file.path(outloc,"Stage1.csv"), row.names=FALSE)
       
       
     } else {
-      setwd(outloc_allres)
-      load("xMSannotator_levelA_modules.Rda")
+      #setwd(outloc_allres)
+      #load("xMSannotator_levelA_modules.Rda")
+      load(file.path(outloc_allres, "xMSannotator_levelA_modules.Rda"))
     }
     
     setwd(outloc)
@@ -436,7 +461,9 @@ function(
     l1 <- list.files(outloc)
     check_levelB <- which(l1 == "xMSannotator_levelB.Rda")
     
-    save(chemCompMZ, file="chemCompMZ.Rda")
+    #save(chemCompMZ, file="chemCompMZ.Rda")
+    
+    save(chemCompMZ, file = file.path(outloc, "chemCompMZ.Rda"))
     
     primary_adducts   <- intersect(primary_adducts, adduct_names)
     secondary_adducts <- setdiff(adduct_names, primary_adducts)
@@ -501,7 +528,10 @@ function(
       if (is.null(levelB_primary) || nrow(levelB_primary) == 0L)
         stop("Step 2A produced no primary adduct matches. Check adduct list and mass tolerance.")
       
-      save(levelB_primary, file="xMSannotator_levelB_primary.Rda")
+     # save(levelB_primary, file="xMSannotator_levelB_primary.Rda")
+
+      save(levelB_primary, file=file.path(outloc, "xMSannotator_levelB_primary.Rda"))
+      
       print(paste("Step 2A complete:", nrow(levelB_primary), "primary matches"))
       
 
@@ -617,11 +647,13 @@ function(
       rm(levelB_primary, levelB_secondary)
       
       print(paste("Combined DB matches (2A+2B):", nrow(levelB_res)))
-      save(levelB_res, file="xMSannotator_levelB.Rda")
+      #save(levelB_res, file="xMSannotator_levelB.Rda")
+      save(levelB_res, file=file.path(outloc, "xMSannotator_levelB.Rda"))
       
     } else {
       print("Status 2: Using existing m/z mapping results:")
-      load("xMSannotator_levelB.Rda")
+      #load("xMSannotator_levelB.Rda")
+       load(file.path(outloc, "xMSannotator_levelB.Rda"))
     }
     
     try(rm(hmdbAllinf, envir=.GlobalEnv), silent=TRUE)
@@ -632,8 +664,8 @@ function(
     levelB_res$mz   <- round(levelB_res$mz, 5L)
     
     levels_A <- names(table(levelA_res$Module_RTclust))
-    save(levelA_res, file="levelA_res.Rda")
-    save(levelB_res, file="levelB_res.Rda")
+    save(levelA_res, file=file.path(outloc, "levelA_res.Rda"))
+    save(levelB_res, file=file.path(outloc, "levelB_res.Rda"))
     
     levelA_res <- levelA_res[order(levelA_res$mz, levelA_res$time), ]
     
@@ -772,7 +804,7 @@ function(
              "check_isp_abundance","include_secondary_associations",
              "isotopes_losses_fragments_transformations",
              "require_primary_adduct","check_id_col","peakID_mz_time"),
-      file="tempobjects.Rda")
+      file=file.path(outloc,"tempobjects.Rda"))
     
     #"isop_res_md",
     save(
@@ -784,11 +816,11 @@ function(
              "mass_defect_mode","allsteps","check_isp_abundance",
              "include_secondary_associations",
              "isotopes_losses_fragments_transformations","primary_adducts"),
-      file="step1_results.Rda")
+      file=file.path(outloc,"step1_results.Rda"))
     
     
     
-    write.csv(mchemdata, file="Stage2.csv", row.names=FALSE)
+    write.csv(mchemdata, file=file.path(outloc,"Stage2.csv"), row.names=FALSE)
     
     
     
@@ -803,15 +835,15 @@ function(
     try(rm(levelB_res2), silent=TRUE)
     
     rm(list=ls())
-    load("tempobjects.Rda")
+    load(file.path(outloc,"tempobjects.Rda"))
     
   } else {
     
     print("Status 1: Skipping step 1.")
     print("Status 2: Using existing step1_results.Rda file.")
     allsteps_temp <- allsteps
-    load("tempobjects.Rda")
-    load("step1_results.Rda")
+    load(file.path(outloc,"tempobjects.Rda"))
+    load(file.path(outloc,"step1_results.Rda"))
     allsteps <- allsteps_temp
   }
   
@@ -855,7 +887,7 @@ function(
       
       # ---- Slow path: run step2 workers then step3 ----
       print("Status 3: Calculating scores for individual chemicals/metabolites")
-      load("step1_results.Rda")
+      load(file.path(outloc,"step1_results.Rda"))
       
      
       prep <- prepare_stage3_hybrid(
@@ -990,9 +1022,9 @@ function(
       setorder(diag, -n_adducts, -score)
       
 
-      write.csv(diag,file="Stage3A_scoring_summary.csv")
+      write.csv(diag,file=file.path(outloc,"Stage3A_scoring_summary.csv"))
       
-      write.csv(result,file="Stage3A.csv")
+      write.csv(result,file=file.path(outloc,"Stage3A.csv"))
       
       
       
@@ -1009,7 +1041,7 @@ function(
       rm(list=ls())
       
       try(rm(hmdbCompMZ), silent=TRUE)
-      load("tempobjects.Rda")
+      load(file.path(outloc,"tempobjects.Rda"))
       if (!exists("require_primary_adduct")) require_primary_adduct <- FALSE
       if (!exists("max.mz.diff"))           max.mz.diff            <- 10
       if (!exists("min_ions_perchem"))      min_ions_perchem        <- 1
@@ -1037,7 +1069,7 @@ function(
     rm(list=ls())
     try(rm(hmdbCompMZ), silent=TRUE)
     try(rm(hmdbCompMZ, env=.GlobalEnv), silent=TRUE)
-    load("tempobjects.Rda")
+    load(file.path(outloc,"tempobjects.Rda"))
     # Defensive defaults: older tempobjects.Rda files (pre-v2.2.1) may be missing
     # parameters added in later patches. Provide safe fallbacks so cached runs
     # don't fail with "object not found".
@@ -1063,7 +1095,7 @@ function(
       stage3_mtime)
     fp4_file   <- file.path(outloc, "stage4_params.fp")
     fp4_cached <- .xms_read_fp(fp4_file)
-    stage4_csv <- file.path(outloc, "Stage4_curated.csv")
+    stage4_csv <- file.path(outloc, "Stage4.csv")
     
     if (fp4_current == fp4_cached && file.exists(stage4_csv)) {
       
@@ -1086,7 +1118,7 @@ function(
     }
     
     rm(list=ls())
-    load("tempobjects.Rda")
+    load(file.path(outloc,"tempobjects.Rda"))
     try(rm(hmdbAllinf, env=.GlobalEnv), silent=TRUE)
     
     if (!exists("require_primary_adduct")) require_primary_adduct <- FALSE
@@ -1102,8 +1134,8 @@ function(
       # ------------------------------------------------------------------
       # Status 6: Redundancy filtering (step5)
       # ------------------------------------------------------------------
-      stage4_mtime <- if (file.exists(file.path(outloc, "Stage4_curated.csv")))
-        as.character(file.mtime(file.path(outloc, "Stage4_curated.csv")))
+      stage4_mtime <- if (file.exists(file.path(outloc, "Stage4.csv")))
+        as.character(file.mtime(file.path(outloc, "Stage4.csv")))
       else "none"
       
       fp5_current <- .xms_fingerprint(
@@ -1148,35 +1180,35 @@ function(
   if(!is.na(check_id_col)){
     print("Adding Peak ID column")
     
-    stage1<-fread("Stage1.csv")
+    stage1<-fread(file.path(outloc,"Stage1.csv"))
     
     annotresstage1<-merge(peakID_mz_time, stage1,by=c("mz","time")) 
     write.csv(annotresstage1,file="Stage1.csv",row.names=FALSE)
     
-    stage2<-fread("Stage2.csv")
+    stage2<-fread(file.path(outloc,"Stage2.csv"))
     
     annotresstage2<-merge(peakID_mz_time, stage2,by=c("mz","time")) 
     write.csv(annotresstage2,file="Stage2.csv",row.names=FALSE)
     
-    stage3a<-fread("Stage3A.csv")
+    stage3a<-fread(file.path(outloc,"Stage3A.csv"))
     
     annotresstage3A<-merge(peakID_mz_time, stage3a,by=c("mz","time")) 
     write.csv(annotresstage3A,file="Stage3A.csv",row.names=FALSE)
     
-    stage3b<-fread("Stage3B.csv")
+    stage3b<-fread(file.path(outloc,"Stage3B.csv"))
     
     annotresstage3B<-merge(peakID_mz_time, stage3b,by=c("mz","time")) 
     write.csv(annotresstage3B,file="Stage3B.csv",row.names=FALSE)
     
-    stage4<-fread("Stage4_curated.csv")
+    stage4<-fread(file.path(outloc,"Stage4.csv"))
     
     annotresstage4<-merge(peakID_mz_time, stage4,by=c("mz","time")) 
     write.csv(annotresstage4,file="Stage4_curated.csv",row.names=FALSE)
     
-    #stage5<-fread("Stage5.csv")
+    stage5<-fread("Stage5.csv")
     
-    #annotresstage5<-merge(peakID_mz_time, stage5,by=c("mz","time")) 
-    #write.csv(annotresstage5,file="Stage5.csv",row.names=FALSE)
+    annotresstage5<-merge(peakID_mz_time, stage5,by=c("mz","time")) 
+    write.csv(annotresstage5,file="Stage5.csv",row.names=FALSE)
     
   }
   
@@ -1192,8 +1224,8 @@ function(
   }
   
   suppressWarnings(sink(file=NULL))
-  setwd(outloc)
-  sink(file="Readme.txt")
+  #setwd(outloc)
+  sink(file=file.path(outloc,"Readme.txt"))
   print("Output files description:")
   print("Stage1.csv: clustering without annotations")
   print("Stage2.csv: clustering + m/z database matching")

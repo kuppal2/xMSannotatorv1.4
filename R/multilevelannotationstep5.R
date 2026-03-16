@@ -2,9 +2,9 @@ multilevelannotationstep5 <-
 function(outloc) {
   
   
-  setwd(outloc)
   
-  DT <- data.table::fread("Stage4_curated.csv")
+  
+  DT <- data.table::fread(file.path(outloc,"Stage4.csv"))
   setDT(DT)
   
   setorder(DT, -Confidence, -score)
@@ -38,8 +38,8 @@ function(outloc) {
   ############################################################
   ############################################################
   
-  fwrite(final, "Stage5_feature_annotations.csv")
-  fwrite(summary, "Stage5_summary.csv")
+  fwrite(final, file.path(outloc,"Stage5.csv"))
+  fwrite(summary, file.path(outloc,"Stage5_summary.csv"))
   
   print("Stage5 redundancy filtering complete")
   

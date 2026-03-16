@@ -23,4 +23,12 @@ data <- read.csv(system.file(
 ))
 
 res <- multilevelannotation(data)
+
+
+```
+
+## Session information
+
+```{r}
+sessionInfo()
 ```

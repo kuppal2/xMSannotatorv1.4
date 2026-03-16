@@ -14,3 +14,7 @@ Depends: WGCNA, parallel, igraph, foreach, plyr, RcppParallel,Rcpp, KEGGREST, fl
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 SystemRequirements: C++17
+Suggests:
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

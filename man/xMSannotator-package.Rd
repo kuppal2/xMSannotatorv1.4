@@ -1,35 +1,39 @@
-\name{xMSannotator-package}
-\alias{xMSannotator-package}
+\name{xMSannotator_1.4.0-package}
+\alias{xMSannotator_1.4.0-package}
 \alias{xMSannotator}
 \docType{package}
-\title{
-\packageTitle{xMSannotator}
-}
-\description{
-\packageDescription{xMSannotator}
+\title{xMSannotator}
+\description{This package includes functions to perform metabolite annotation using HMDB, KEGG, LipidMaps, T3DB,
+and selected data sources in ChemSpider. 
+
+The multilevelannotation() function uses a multi-criteria approach based on data-driven modules, retention time, 
+adducts, isotopes, mass defect, and various chemical rules and ratio checks for assigning annotations into different
+confidence levels: high (3), medium (2), low (1), and none (0). The function is designed to work with KEGG, HMDB, 
+T3DB, LipidMaps or a custom database provided by the user. You can use status, origin,
+and biofluid location arguments to select subset of metabolites in HMDB for annotation. 
+The "customIDs" argument can be used to only get confidence levels for a subset of metabolites.
+
+KEGG.annotation, T3DB. annotation, HMDB.annotation, LipidMaps.annotation, and ChemSpider.annotation functions perform simple mz based
+annotaion based on the user defined adducts and mass search threshold.
+
+Additional utilites are provided for generating list of expected mz for compounds based on KEGG pathway IDs, species IDs, and compound IDs.
+Users can generate KEGG pathway map images and color code specific metabolites/compounds.
 }
 \details{
-%%  ~~ An overview of how to use the package, ~~
-%%  ~~ including the most important functions ~~
+\tabular{ll}{
+Package: \tab xMSannotator\cr
+Type: \tab Package\cr
+Version: \tab 1.4.0\cr
+Date: \tab 2026-03-15\cr
+License: \tab gpl3.0\cr
+LazyLoad: \tab yes\cr
+}
 }
 \author{
-\packageAuthor{xMSannotator}
-
-Maintainer: \packageMaintainer{xMSannotator}
+Karan Uppal
+Maintainer: <kuppal3@gmail.com>
 }
 \references{
-%%  ~~ Literature or other references for background information ~~
+http://pubs.acs.org/doi/abs/10.1021/acs.analchem.6b01214
 }
-\keyword{package}
-
-%% Uncomment below to imitate parts of library(help = xMSannotator)
-%\section{The \file{DESCRIPTION} File}{\packageDESCRIPTION{xMSannotator}}
-%\section{Documentation Index}{\packageIndices{xMSannotator}}
-
-\seealso{
-%%  ~~ Optional links to other man pages, e.g. ~~
-%%  ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
-}
-\examples{
-%%  ~~ Optional simple examples of the most important functions ~~
-}
+\keyword{ xMSannotator }
