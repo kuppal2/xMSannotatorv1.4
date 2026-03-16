@@ -893,8 +893,20 @@ function(
       if (length(.sf) > 0L) as.character(max(file.mtime(.sf))) else "none"
     }
 
-    .fp3_current  <- .xms_fingerprint(adduct_weights, boostIDs,
-                                      pathwaycheckmode, .score_mtime)
+
+    dataset_fp <- paste(
+      nrow(dataA),
+      round(sum(dataA$mz), 3),
+      round(sum(dataA$time), 3),
+      sep = "_"
+    )
+
+    .fp3_current    <- .xms_fingerprint(dataset_fp,max.mz.diff,
+                                        max.rt.diff,
+                                        corthresh,adduct_weights, boostIDs,
+                                        pathwaycheckmode, .score_mtime)
+    .fp3_file       <- file.path(outloc, "stage3_params.fp")
+
     .stage34_skip <- (.fp3_current == .fp3_cached) &&
       (file.exists(.stage3_rds) || file.exists(.stage3_csv))
 
@@ -1077,7 +1089,17 @@ function(
       # Recompute fp3 after rm/reload (sentinel now guaranteed to exist)
       .step2_sentinel <- file.path(outloc, "stage2", "step2_complete.txt")
       .score_mtime    <- readLines(.step2_sentinel, warn = FALSE)[1L]
-      .fp3_current    <- .xms_fingerprint(adduct_weights, boostIDs,
+
+      dataset_fp <- paste(
+        nrow(dataA),
+        round(sum(dataA$mz), 3),
+        round(sum(dataA$time), 3),
+        sep = "_"
+      )
+
+      .fp3_current    <- .xms_fingerprint(dataset_fp,max.mz.diff,
+                                          max.rt.diff,
+                                          corthresh,adduct_weights, boostIDs,
                                           pathwaycheckmode, .score_mtime)
       .fp3_file       <- file.path(outloc, "stage3_params.fp")
 
@@ -1265,5 +1287,7 @@ function(
     print("Stage5.csv: confidence levels for best scoring chemical_ID, mz, time groups")
   }
   suppressWarnings(sink(file=NULL))
+  files <- list.files(outloc, pattern = "\\.(rds|Rda)$", full.names = TRUE)
+  file.remove(files)
   return(list(results.stage4=annotresstage4,results.stage5=annotresstage5))
 }
