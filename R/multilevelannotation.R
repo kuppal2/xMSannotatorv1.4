@@ -1077,8 +1077,8 @@ Annotation
     }
    # setwd(outloc)
     #rm(list=ls())
-    try(rm(hmdbCompMZ), silent=TRUE)
-    try(rm(hmdbCompMZ, env=.GlobalEnv), silent=TRUE)
+   # try(rm(hmdbCompMZ), silent=TRUE)
+    #try(rm(hmdbCompMZ, env=.GlobalEnv), silent=TRUE)
     load(file.path(outloc,"tempobjects.Rda"))
     # Defensive defaults: older tempobjects.Rda files (pre-v2.2.1) may be missing
     # parameters added in later patches. Provide safe fallbacks so cached runs
@@ -1123,7 +1123,7 @@ Annotation
 
 
 
-      write.csv(annotresstage4$conf_mat%>%as.data.frame(),file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
+      write.csv(as.data.frame(annotresstage4$conf_mat),file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
 
 
 
@@ -1134,7 +1134,7 @@ Annotation
 
    # rm(list=ls())
     load(file.path(outloc,"tempobjects.Rda"))
-    try(rm(hmdbAllinf, env=.GlobalEnv), silent=TRUE)
+    #try(rm(hmdbAllinf, env=.GlobalEnv), silent=TRUE)
 
     if (!exists("require_primary_adduct")) require_primary_adduct <- FALSE
     if (!exists("max.mz.diff"))           max.mz.diff            <- 10
