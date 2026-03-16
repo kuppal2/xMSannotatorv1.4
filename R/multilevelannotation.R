@@ -165,7 +165,7 @@ function(
     
     if (!is.na(missing.value)) {
       for (j in seq_along(dataA)) {
-        set(dataA,
+        data.table::set(dataA,
             i = which(dataA[[j]] == missing.value),
             j = j,
             value = NA)

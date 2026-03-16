@@ -9,8 +9,7 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp, RcppParallel
-Imports: Rcpp, RcppParallel, data.table, igraph, WGCNA, parallel, igraph, foreach, plyr, RcppParallel,Rcpp, KEGGREST, flashClust, Rdisop
-Depends: WGCNA, parallel, igraph, foreach, plyr, RcppParallel,Rcpp, KEGGREST, flashClust, Rdisop
+Depends: WGCNA, parallel, igraph, foreach, plyr, RcppParallel,Rcpp, KEGGREST, flashClust, Rdisop, data.table
 RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 SystemRequirements: C++17
