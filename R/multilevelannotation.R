@@ -53,7 +53,7 @@ function(
   annotation_mode=annotation_mode[1]
   
   dataA      <- as.data.frame(dataA)
-  print(clustmethod)
+  #print(clustmethod)
   
   
   
@@ -430,7 +430,7 @@ function(
     
     levelA_res <- cbind(levelA_res[, 1L:3L], mean_int_vec)
     #dataA      <- dataA[, 1L:2L]
-    rm(dataA)
+    #rm(dataA)
     #############################################################################
     # adduct_names and adduct_table already resolved correctly at function entry
     
@@ -712,7 +712,7 @@ function(
     multiresmat$MatchCategory <- rep("Multiple", nrow(multiresmat))
     multiresmat$MatchCategory[multiresmat$mz %in% uniquemz] <- "Unique"
     
-    setwd(outloc)
+    #setwd(outloc)
     multiresmat <- multiresmat[order(multiresmat$Module_RTclust,
                                      multiresmat$chemical_ID), ]
     dupmz <- multiresmat$mz[duplicated(multiresmat$mz)]
