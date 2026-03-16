@@ -422,7 +422,7 @@ function(
       load(file.path(outloc_allres, "xMSannotator_levelA_modules.Rda"))
     }
     
-    setwd(outloc)
+    #setwd(outloc)
     
     levelA_res <- levelA_res[order(levelA_res$mz, levelA_res$time), ]
     levelA_res <- levelA_res[, 1L:3L]
@@ -457,7 +457,7 @@ function(
     
     chemCompMZ <- as.data.frame(chemCompMZ)
     
-    setwd(outloc)
+    #setwd(outloc)
     l1 <- list.files(outloc)
     check_levelB <- which(l1 == "xMSannotator_levelB.Rda")
     
@@ -834,7 +834,7 @@ function(
     try(rm(tablemz), silent=TRUE)
     try(rm(levelB_res2), silent=TRUE)
     
-    rm(list=ls())
+    #rm(list=ls())
     load(file.path(outloc,"tempobjects.Rda"))
     
   } else {
@@ -962,6 +962,8 @@ function(
       
       expanded_full <- rbind(DT, parent_rows)
       
+      rm(DT)
+      rm(parent_rows)
       # ---------------------------
       # Re-sort + re-index
       # ---------------------------
@@ -1036,9 +1038,9 @@ function(
       writeLines(as.character(Sys.time()),
                  file.path(outloc, "stage2", "step2_complete.txt"))
       
-      setwd(outloc)
+      #setwd(outloc)
       
-      rm(list=ls())
+      #rm(list=ls())
       
       try(rm(hmdbCompMZ), silent=TRUE)
       load(file.path(outloc,"tempobjects.Rda"))
@@ -1065,8 +1067,8 @@ function(
       .xms_write_fp(.fp3_file, .fp3_current)
       
     }
-    setwd(outloc)
-    rm(list=ls())
+   # setwd(outloc)
+    #rm(list=ls())
     try(rm(hmdbCompMZ), silent=TRUE)
     try(rm(hmdbCompMZ, env=.GlobalEnv), silent=TRUE)
     load(file.path(outloc,"tempobjects.Rda"))
@@ -1117,7 +1119,7 @@ function(
       
     }
     
-    rm(list=ls())
+   # rm(list=ls())
     load(file.path(outloc,"tempobjects.Rda"))
     try(rm(hmdbAllinf, env=.GlobalEnv), silent=TRUE)
     
