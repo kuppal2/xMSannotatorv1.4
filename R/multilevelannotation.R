@@ -1156,7 +1156,7 @@ function(
       ]
 
       cat("Stage 4 confidence distribution (unique chemical IDs)\n")
-      print(chem_conf[, .N, by = Confidence][order(-Confidence)])
+      print(chem_conf[, data.table::..N, by = Confidence][order(-Confidence)])
 
       write.csv(annotresstage4$cluster_summary,file=file.path(outloc,"Stage4_cluster_summary.csv"),row.names=FALSE)
 
