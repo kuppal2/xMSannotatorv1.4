@@ -1090,12 +1090,7 @@ function(
       .step2_sentinel <- file.path(outloc, "stage2", "step2_complete.txt")
       .score_mtime    <- readLines(.step2_sentinel, warn = FALSE)[1L]
 
-      dataset_fp <- paste(
-        nrow(dataA),
-        round(sum(dataA$mz), 3),
-        round(sum(dataA$time), 3),
-        sep = "_"
-      )
+
 
       .fp3_current    <- .xms_fingerprint(dataset_fp,max.mz.diff,
                                           max.rt.diff,
