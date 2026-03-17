@@ -1162,7 +1162,7 @@ function(
 
       cat("Stage 4 confidence distribution (unique chemical IDs)\n")
 
-     cat(
+     print(
         chem_conf[
           , list(N = .N),
           by = Confidence
