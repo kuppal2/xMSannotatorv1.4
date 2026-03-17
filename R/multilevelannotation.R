@@ -22,6 +22,8 @@ function(
     primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA)
 {
   options(warn=-1)
+  files <- list.files(outloc, pattern = "\\.(rds|Rda)$", full.names = TRUE)
+  try(file.remove(files),silent=TRUE)
 
   .xms_read_fp <- function(fp_file) {
     if (file.exists(fp_file)) readLines(fp_file, warn = FALSE)[1L] else ""
@@ -803,6 +805,12 @@ function(
       split_size    <- 1L
     }
     num_sets <- length(chemids_split)
+    dataset_fp <- paste(
+      nrow(dataA),
+      round(sum(dataA$mz), 3),
+      round(sum(dataA$time), 3),
+      sep = "_"
+    )
 
 
     save(
@@ -834,12 +842,7 @@ function(
 
 
 
-    dataset_fp <- paste(
-      nrow(dataA),
-      round(sum(dataA$mz), 3),
-      round(sum(dataA$time), 3),
-      sep = "_"
-    )
+
 
     rm(mchemdata); rm(chemids); rm(mzid); try(rm(global_cor), silent=TRUE)
     rm(isop_res_md); rm(level_module_isop_annot); rm(dataA)
