@@ -823,7 +823,7 @@ function(
              "num_nodes","adduct_weights","filter.by","max.rt.diff","max_isp",
              "MplusH.abundance.ratio.check","mass_defect_window",
              "mass_defect_mode","allsteps","check_isp_abundance",
-             "include_secondary_associations",
+             "include_secondary_associations","dataset_fp",
              "isotopes_losses_fragments_transformations","primary_adducts"),
       file=file.path(outloc,"step1_results.Rda"))
 
