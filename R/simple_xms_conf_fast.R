@@ -103,13 +103,6 @@ function(stage3_results,
   # Sort rows by confidence (highest first)
   setorder(curated_res, -Confidence)
 
-  chem_conf <- curated_res[
-    , .(Confidence = max(Confidence, na.rm=TRUE)),
-    by = chemical_ID
-  ]
-
-  cat("Stage 4 confidence distribution (unique chemical IDs)\n")
-  print(chem_conf[, .N, by = Confidence][order(-Confidence)])
 
 
 
