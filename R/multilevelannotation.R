@@ -1153,10 +1153,21 @@ function(
       annotresstage3<- data.table::fread(stage3_csv, data.table=FALSE)
       annotresstage4<-simple_xms_conf_fast(stage3_results=annotresstage3)
 
-      chem_conf <- data.table::as.data.table(annotresstage4$curated_res)[
+      DT <- data.table::as.data.table(annotresstage4$curated_res)
+
+      chem_conf <- DT[
         , list(Confidence = max(Confidence, na.rm = TRUE)),
         by = chemical_ID
       ]
+
+      cat("Stage 4 confidence distribution (unique chemical IDs)\n")
+
+      print(
+        chem_conf[
+          , list(N = .N),
+          by = Confidence
+        ][order(-Confidence)]
+      )
 
       cat("Stage 4 confidence distribution (unique chemical IDs)\n")
 
