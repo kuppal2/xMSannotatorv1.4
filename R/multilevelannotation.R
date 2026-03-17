@@ -1153,8 +1153,8 @@ function(
       annotresstage3<- data.table::fread(stage3_csv, data.table=FALSE)
       annotresstage4<-simple_xms_conf_fast(stage3_results=annotresstage3)
 
-      chem_conf <- annotresstage4$curated_res[
-        , list(Confidence = max(Confidence, na.rm=TRUE)),
+      chem_conf <- data.table::as.data.table(annotresstage4$curated_res)[
+        , list(Confidence = max(Confidence, na.rm = TRUE)),
         by = chemical_ID
       ]
 
