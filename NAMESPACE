@@ -60,6 +60,8 @@ importFrom(utils, write.csv)
 importFrom(utils, read.csv)
 
 export(
+  check_golden_rules,
+  check_element,
   get_brite_res,
   get_kegg_map,
   get_mz_by_KEGGcompoundIDs,
@@ -80,5 +82,9 @@ export(
   simple_xms_conf_fast,
   expand_isotopes_ultra_fast_cpp,
   simpleAnnotation,
+  HMDB.Annotation,
+  KEGG.Annotation,
+  LipidMaps.Annotation,
+  T3DB.Annotation,
   load_db
 )
