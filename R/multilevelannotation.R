@@ -19,7 +19,7 @@ function(
     isotopes_losses_fragments_transformations=NA,
     clustmethod="auto",
     require_primary_adduct=FALSE,annotation_mode=c("onepass","twopass_moduleschemical_with_primary_hits"),
-    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA)
+    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA,graphmethod="knngraph")
 {
   options(warn=-1)
   files <- list.files(outloc, pattern = "\\.(rds|Rda)$", full.names = TRUE)
@@ -302,8 +302,8 @@ function(
 
         if (use_ultra_clust) {
 
-          print("Running knngraph clustering")
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod="knn",min_cluster_size=min_cluster_size))
+          #print("Running graph clustering")
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod=graphmethod,min_cluster_size=min_cluster_size,rt_window=2*max_diff_rt,alpha=corthresh))
 
           gc()
           save(levelA_res,dataA,corthresh,file="levelA_res.Rda")

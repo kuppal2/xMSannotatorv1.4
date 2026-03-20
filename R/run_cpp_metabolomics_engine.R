@@ -1,7 +1,7 @@
 run_cpp_metabolomics_engine <-
 function(dataA,
                                         rt_window = 10,
-                                        alpha = 0.7,graphmethod="knn",min_cluster_size=10) {
+                                        alpha = 0.7,graphmethod="knngraph",min_cluster_size=10) {
 
   library(data.table)
   library(igraph)
@@ -14,6 +14,7 @@ function(dataA,
   X <- scale(X, center = TRUE, scale = FALSE)
 
   if(graphmethod=="sparsegraph"){
+    print("Running sparse graph clustering...")
   #calls the C++ sparse graph builder; alpha is the correlation threshold
   res <- build_sparse_graph_parallel(
     X = X,
@@ -30,7 +31,7 @@ function(dataA,
   )
   }else{
 
-    print("Running nn2...")
+    print("Running knn graph clustering...")
     # Replace non-finite values
     X[is.na(X)] <- 0
 
