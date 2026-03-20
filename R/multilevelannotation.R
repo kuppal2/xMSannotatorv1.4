@@ -303,7 +303,7 @@ function(
         if (use_ultra_clust) {
 
           print("Running knngraph clustering")
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA))
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod="knn"))
 
           gc()
           save(levelA_res,dataA,corthresh,file="levelA_res.Rda")
