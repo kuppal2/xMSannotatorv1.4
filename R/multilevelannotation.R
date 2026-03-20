@@ -234,7 +234,7 @@ function(
 
       if(clustmethod=="auto"){
 
-        if(nrow(dataA)>1000 & ncol(dataA)>30){
+        if(nrow(dataA)>10000 & ncol(dataA)>30){
           use_ultra_clust=TRUE
           use_graph_clust=FALSE
           use_linear_rt   <- endsWith(tolower(clustmethod_norm),   "rtlinear")
@@ -303,8 +303,10 @@ function(
         if (use_ultra_clust) {
 
           # print("Running ultra one-shot RT-intensity clustering")
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,alpha=corthresh))
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,alpha=corthresh,rt_window=quantile(dataA$time, 0.99) - quantile(dataA$time, 0.01)))
+
           gc()
+          save(levelA_res,dataA,corthresh,file="levelA_res.Rda")
           ultra_mods <- sort(unique(levelA_res$Module_RTclust))
           # dataA<-dataA[,-which(colnames(dataA)=="Module_RTclust")]
           rt_grouped <- lapply(ultra_mods, function(gnum) {
