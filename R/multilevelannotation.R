@@ -234,7 +234,7 @@ function(
 
       if(clustmethod=="auto"){
 
-        if(nrow(dataA)>10000 & ncol(dataA)>30){
+        if(nrow(dataA)>1000 & ncol(dataA)>30){
           use_ultra_clust=TRUE
           use_graph_clust=FALSE
           use_linear_rt   <- endsWith(tolower(clustmethod_norm),   "rtlinear")
