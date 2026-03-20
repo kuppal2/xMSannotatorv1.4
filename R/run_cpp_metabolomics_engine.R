@@ -30,6 +30,7 @@ function(dataA,
   )
   }else{
 
+    print("Running nn2")
     nn <- nn2(X, k = 15)
 
     edges <- cbind(
