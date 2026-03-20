@@ -1,7 +1,7 @@
 run_cpp_metabolomics_engine <-
 function(dataA,
                                         rt_window = 10,
-                                        alpha = 0.7,graphmethod="knn") {
+                                        alpha = 0.7,graphmethod="knn",min_cluster_size=10) {
 
   library(data.table)
   library(igraph)
@@ -30,8 +30,11 @@ function(dataA,
   )
   }else{
 
-    print("Running nn2")
-    nn <- nn2(X, k = 15)
+    print("Running nn2...")
+    # Replace non-finite values
+    X[is.na(X)] <- 0
+
+    nn <- nn2(X, k = min_cluster_size)
 
     edges <- cbind(
       rep(1:nrow(X), each = 15),
