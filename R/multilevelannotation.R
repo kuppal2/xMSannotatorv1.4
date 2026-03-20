@@ -302,8 +302,8 @@ function(
 
         if (use_ultra_clust) {
 
-          # print("Running ultra one-shot RT-intensity clustering")
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,alpha=corthresh,rt_window=quantile(dataA$time, 0.99) - quantile(dataA$time, 0.01)))
+          print("Running knngraph clustering")
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA))
 
           gc()
           save(levelA_res,dataA,corthresh,file="levelA_res.Rda")
