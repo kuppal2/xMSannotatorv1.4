@@ -1,7 +1,7 @@
 run_cpp_metabolomics_engine <-
 function(dataA,
                                         rt_window = 10,
-                                        alpha = 0.7,graphmethod="sparse",min_cluster_size=10) {
+                                        alpha = 0.7,graphmethod="sparsegraph",min_cluster_size=10) {
 
   library(data.table)
   library(igraph)

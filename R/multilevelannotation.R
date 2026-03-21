@@ -19,12 +19,12 @@ function(
     isotopes_losses_fragments_transformations=NA,
     clustmethod="auto",
     require_primary_adduct=FALSE,annotation_mode=c("onepass","twopass_moduleschemical_with_primary_hits"),
-    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA,graphmethod="knngraph")
+    primary_adducts=c("M+H", "M+Na", "M+K", "M+NH4", "M+H-H2O","M-H", "M+FA-H", "M+Cl", "M-H-H2O", "M+Na-2H"),peakID_name=NA)
 {
   options(warn=-1)
   files <- list.files(outloc, pattern = "\\.(rds|Rda)$", full.names = TRUE)
   try(file.remove(files),silent=TRUE)
-
+ cat("Starting xMSannotator ",packageVersion("xMSannotator"))
   .xms_read_fp <- function(fp_file) {
     if (file.exists(fp_file)) readLines(fp_file, warn = FALSE)[1L] else ""
   }
