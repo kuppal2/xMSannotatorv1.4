@@ -19,8 +19,8 @@ function(dataA,
   res <- build_sparse_graph_parallel(
     X = X,
     rt = dataA$time,
-    rt_window = rt_window*2,
-    alpha = alpha^2,
+    rt_window = max(dataA$time,na.rm=TRUE),
+    alpha = alpha^3,
     top_k=min_cluster_size
   )
 
