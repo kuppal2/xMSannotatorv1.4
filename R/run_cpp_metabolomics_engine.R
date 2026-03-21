@@ -19,8 +19,8 @@ function(dataA,
   res <- build_sparse_graph_parallel(
     X = X,
     rt = dataA$time,
-    rt_window = max(dataA$time,na.rm=TRUE),
-    alpha = alpha^3,
+    rt_window = rt_window,
+    alpha = alpha,
     top_k=min_cluster_size
   )
 
@@ -29,6 +29,7 @@ function(dataA,
     from = as.character(res$from),
     to = as.character(res$to),
     weight = res$weight
+    save(edge=file="edges.Rda")
   )
   }else{
 
