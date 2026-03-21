@@ -1,7 +1,7 @@
 run_cpp_metabolomics_engine <-
 function(dataA,
                                         rt_window = 10,
-                                        alpha = 0.7,graphmethod="knngraph",min_cluster_size=10) {
+                                        alpha = 0.7,graphmethod="sparse",min_cluster_size=10) {
 
   library(data.table)
   library(igraph)
@@ -63,9 +63,9 @@ function(dataA,
   E(g)$weight <- pmax(E(g)$weight^2, 0)
   set.seed(555)
 
-   cl <- cluster_leiden(
+   cl <- cluster_infomap(
     g,
-    weights = E(g)$weight
+    e.weights = E(g)$weight
     #resolution = resolution
   )
 
