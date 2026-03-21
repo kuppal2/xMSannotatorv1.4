@@ -52,7 +52,7 @@ function(dataA,
     vertices = data.frame(name = as.character(seq_len(nrow(dataA))))
   )
   save(g,file="g.Rda")
-  g <- simplify(g, edge.attr.comb = "mean")
+ # g <- simplify(g, edge.attr.comb = "mean")
 
   avg_deg <- mean(degree(g))
   #resolution <- 1 / avg_deg
@@ -71,7 +71,7 @@ function(dataA,
 
    cl <- cluster_infomap(g, e.weights = (E(g)$weight)) #resolution = resolution
 
-   #cl <- cluster_walktrap(g) #, weights = E(g)$weight, steps = 5)
+   cl <- cluster_walktrap(g) #, weights = E(g)$weight, steps = 5)
 
   dataA[, Module_RTclust := as.character(membership(cl))]
 
