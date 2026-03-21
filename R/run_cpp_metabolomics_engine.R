@@ -30,7 +30,7 @@ function(dataA,
     to = as.character(res$to),
     weight = res$weight
     )
-  save(edge,file="edges.Rda")
+
   }else{
 
     print("Running knn graph clustering...")
@@ -51,7 +51,7 @@ function(dataA,
     directed = FALSE,
     vertices = data.frame(name = as.character(seq_len(nrow(dataA))))
   )
-
+  save(g,file="g.Rda")
   g <- simplify(g, edge.attr.comb = "mean")
 
   avg_deg <- mean(degree(g))
