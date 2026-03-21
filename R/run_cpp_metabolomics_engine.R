@@ -68,9 +68,9 @@ function(dataA,
  # E(g)$weight <- pmax(E(g)$weight^2, 0)
   set.seed(555)
 
-   #cl <- cluster_infomap(g, e.weights = E(g)$weight) #resolution = resolution
+  # cl <- cluster_infomap(g, e.weights = E(g)$weight) #resolution = resolution
 
-   cl <- cluster_walktrap(g, weights = E(g)$weight, steps = 5)
+   cl <- cluster_walktrap(g) #, weights = E(g)$weight, steps = 5)
 
   dataA[, Module_RTclust := as.character(membership(cl))]
 
