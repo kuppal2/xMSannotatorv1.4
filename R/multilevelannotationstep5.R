@@ -48,6 +48,23 @@ function(outloc) {
     ][order(-Confidence)]
   )
 
+  DT[, Formula_clean := sub("_\\[.*\\]$", "", Formula)]
+
+  formula_conf <- DT[
+    , list(
+      Confidence = if (all(is.na(Confidence))) NA_real_
+      else max(Confidence, na.rm = TRUE)
+    ),
+    by = Formula_clean
+  ]
+  cat("Stage 5 confidence distribution (unique formulas)\n")
+
+  print(
+    formula_conf[
+      , list(N = .N),
+      by = Confidence
+    ][order(-Confidence)]
+  )
   ############################################################
   ############################################################
 

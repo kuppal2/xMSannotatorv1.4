@@ -35,12 +35,14 @@ function(dataA,
     print("Running knn graph clustering...")
     # Replace non-finite values
     X[is.na(X)] <- 0
+    X[!is.finite(X)] <- 0  # also catch Inf/-Inf
 
     nn <- nn2(X, k = min_cluster_size)
 
-    edges <- cbind(
-      rep(1:nrow(X), each = 15),
-      as.vector(nn$nn.idx)
+    edges <- data.frame(
+      from   = as.character(rep(1:nrow(X), each = min_cluster_size)),
+      to     = as.character(as.vector(nn$nn.idx)),
+      weight = 1 / (1 + as.vector(nn$nn.dists))  # convert distance → similarity
     )
 }
   g <- graph_from_data_frame(
@@ -52,19 +54,21 @@ function(dataA,
   g <- simplify(g, edge.attr.comb = "mean")
 
   avg_deg <- mean(degree(g))
-  resolution <- 1 / avg_deg
-
+  #resolution <- 1 / avg_deg
+  resolution <- 1.0 / log1p(avg_deg)
   ############################################################
   # Leiden clustering
   ############################################################
   Sys.setenv(OMP_NUM_THREADS = 1)
-
+  E(g)$weight <- pmax(E(g)$weight^2, 0)
   set.seed(555)
-  cl <- cluster_leiden(
+
+   cl <- cluster_leiden(
     g,
     weights = E(g)$weight,
     resolution = resolution
   )
+
 
   dataA[, Module_RTclust := as.character(membership(cl))]
 
