@@ -24,7 +24,7 @@ function(
   options(warn=-1)
   files <- list.files(outloc, pattern = "\\.(rds|Rda)$", full.names = TRUE)
   try(file.remove(files),silent=TRUE)
- cat("Starting xMSannotator ",packageVersion("xMSannotator"))
+ print(paste0("Starting xMSannotator ",packageVersion("xMSannotator")))
   .xms_read_fp <- function(fp_file) {
     if (file.exists(fp_file)) readLines(fp_file, warn = FALSE)[1L] else ""
   }
