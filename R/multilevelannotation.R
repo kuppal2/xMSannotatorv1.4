@@ -55,6 +55,7 @@ function(
   WGCNA::allowWGCNAThreads(nThreads=num_nodes)
 
   annotation_mode=annotation_mode[1]
+  graphmethod="sparsegraph"
 
   dataA      <- as.data.frame(dataA)
   #print(clustmethod)
