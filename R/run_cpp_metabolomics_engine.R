@@ -60,6 +60,11 @@ function(dataA,
   # Leiden clustering
   ############################################################
   Sys.setenv(OMP_NUM_THREADS = 1)
+  # Remove NaN/NA/Inf edges
+  bad_edges <- which(is.nan(E(g)$weight) | is.na(E(g)$weight) | !is.finite(E(g)$weight))
+  cat("Removing", length(bad_edges), "bad edges\n")
+  g <- delete_edges(g, bad_edges)
+
   E(g)$weight <- pmax(E(g)$weight^2, 0)
   set.seed(555)
 
