@@ -177,8 +177,7 @@ struct Stage3Worker : public Worker {
         
         auto it = weight_map.find(a);
         
-        if (it != weight_map.end())
-          adduct_sum += it->second;
+        adduct_sum += (it != weight_map.end()) ? it->second : 1.0;
       }
       
       //-------------------------------------

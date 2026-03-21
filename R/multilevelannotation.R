@@ -1033,6 +1033,7 @@ function(
         all(group_start_cpp < group_end_cpp)
       )
 
+      expanded_full$Adduct<-gsub(expanded_full$Adduct,pattern="M_",replacement="ISP_")
       #call the scoring function
       result <- suppressWarnings(stage3_score_engine_cpp(
         expanded_full,
@@ -1062,6 +1063,8 @@ function(
 
       # sort by adduct diversity
       setorder(diag, -n_adducts, -score)
+
+      setorder(result, -score, chemical_ID, Module_RTclust, mz, time)
 
 
       write.csv(diag,file=file.path(outloc,"Stage3A_scoring_summary.csv"))
