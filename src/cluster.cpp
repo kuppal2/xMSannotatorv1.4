@@ -3,6 +3,7 @@
 
 #include <Rcpp.h>
 #include <RcppParallel.h>
+#include <algorithm>
 
 using namespace Rcpp;
 using namespace RcppParallel;
@@ -13,10 +14,11 @@ struct SparseGraphBuilder : public Worker {
   const RVector<double> rt;
   double rt_window;
   double alpha;
+  int top_k;
+  
   int n_samples;
   int n_features;
   
-  // Thread-safe containers
   std::vector< std::vector<int> > from_list;
   std::vector< std::vector<int> > to_list;
   std::vector< std::vector<double> > weight_list;
@@ -24,8 +26,9 @@ struct SparseGraphBuilder : public Worker {
   SparseGraphBuilder(NumericMatrix X,
                      NumericVector rt,
                      double rt_window,
-                     double alpha)
-    : X(X), rt(rt), rt_window(rt_window), alpha(alpha),
+                     double alpha,
+                     int top_k)
+    : X(X), rt(rt), rt_window(rt_window), alpha(alpha), top_k(top_k),
       n_samples(X.ncol()), n_features(X.nrow())
   {
     from_list.resize(n_features);
@@ -37,14 +40,13 @@ struct SparseGraphBuilder : public Worker {
     
     for (size_t i = begin; i < end; ++i) {
       
-      for (size_t j = i + 1; j < n_features; ++j) {
+      std::vector<std::pair<int, double>> neighbors;
+      
+      for (size_t j = 0; j < n_features; ++j) {
+        if (i == j) continue;
         
-        if (std::abs(rt[i] - rt[j]) > rt_window)
-          continue;
-        
-        double num = 0.0;
-        double denom_i = 0.0;
-        double denom_j = 0.0;
+        // --- compute correlation ---
+        double num = 0.0, denom_i = 0.0, denom_j = 0.0;
         
         for (int k = 0; k < n_samples; ++k) {
           double xi = X(i, k);
@@ -54,36 +56,57 @@ struct SparseGraphBuilder : public Worker {
           denom_j += xj * xj;
         }
         
+        if (denom_i == 0 || denom_j == 0) continue;
+        
         double r = num / std::sqrt(denom_i * denom_j);
         
-        if (std::abs(r) < 1e-12)
-          continue;
+        if (std::abs(r) < alpha) continue;
         
-        //double t_stat = r * std::sqrt((n_samples - 2.0) / (1.0 - r * r));
-        //double pval = 2.0 * R::pt(-std::abs(t_stat), n_samples - 2.0, 1, 0);
+        // --- soft RT weighting ---
+        double rt_diff = std::abs(rt[i] - rt[j]);
+        double rt_weight = std::exp(-rt_diff / rt_window);
         
-       //if (pval < alpha) {
-         if(r>alpha){ 
-          from_list[i].push_back(i + 1);
-          to_list[i].push_back(j + 1);
-          weight_list[i].push_back(r);
-        }
+        double w = std::abs(r) * rt_weight;
+        
+        neighbors.emplace_back(j, w);
+      }
+      
+      // --- top-K pruning ---
+      if (neighbors.size() > (size_t)top_k) {
+        std::partial_sort(
+          neighbors.begin(),
+          neighbors.begin() + top_k,
+          neighbors.end(),
+          [](const std::pair<int,double>& a, const std::pair<int,double>& b) {
+            return a.second > b.second;
+          }
+        );
+        neighbors.resize(top_k);
+      }
+      
+      // --- store edges ---
+      for (auto &p : neighbors) {
+        from_list[i].push_back(i + 1);
+        to_list[i].push_back(p.first + 1);
+        weight_list[i].push_back(p.second);
       }
     }
   }
 };
 
 // [[Rcpp::export]]
-List build_sparse_graph_parallel(NumericMatrix X,
-                                 NumericVector rt,
-                                 double rt_window,
-                                 double alpha) {
+List build_sparse_graph_parallel(
+    NumericMatrix X,
+    NumericVector rt,
+    double rt_window,
+    double alpha,
+    int top_k = 15
+) {
   
-  SparseGraphBuilder builder(X, rt, rt_window, alpha);
+  SparseGraphBuilder builder(X, rt, rt_window, alpha, top_k);
   
   parallelFor(0, X.nrow(), builder);
   
-  // Merge thread-safe buffers
   std::vector<int> from;
   std::vector<int> to;
   std::vector<double> weight;

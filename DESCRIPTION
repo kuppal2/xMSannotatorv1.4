@@ -1,8 +1,8 @@
 Package: xMSannotator
 Type: Package
 Title: Network-Based Annotation of Untargeted Metabolomics Data
-Version: 1.4.0
-Date: 2026-03-15
+Version: 1.4.1
+Date: 2026-03-21
 Authors@R: 
     person("Karan", "Uppal",
            email = "kuppal3gt@gmail.com",
@@ -31,7 +31,8 @@ Imports:
     flashClust,
     Rdisop,
     parallel,
-    fastcluster
+    fastcluster,
+    RANN
 LinkingTo:
     Rcpp,
     RcppParallel

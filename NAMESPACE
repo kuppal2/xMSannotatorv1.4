@@ -59,6 +59,9 @@ importFrom(stats, IQR)
 importFrom(utils, write.csv)
 importFrom(utils, read.csv)
 
+# plyr
+importFrom(RANN, nn2)
+
 export(
   check_golden_rules,
   check_element,

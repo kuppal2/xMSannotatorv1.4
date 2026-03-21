@@ -20,7 +20,8 @@ function(dataA,
     X = X,
     rt = dataA$time,
     rt_window = rt_window,
-    alpha = alpha
+    alpha = alpha,
+    top_k=min_cluster_size
   )
 
 

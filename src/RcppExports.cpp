@@ -32,8 +32,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // build_sparse_graph_parallel
-List build_sparse_graph_parallel(NumericMatrix X, NumericVector rt, double rt_window, double alpha);
-RcppExport SEXP _xMSannotator_build_sparse_graph_parallel(SEXP XSEXP, SEXP rtSEXP, SEXP rt_windowSEXP, SEXP alphaSEXP) {
+List build_sparse_graph_parallel(NumericMatrix X, NumericVector rt, double rt_window, double alpha, int top_k);
+RcppExport SEXP _xMSannotator_build_sparse_graph_parallel(SEXP XSEXP, SEXP rtSEXP, SEXP rt_windowSEXP, SEXP alphaSEXP, SEXP top_kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -41,7 +41,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type rt(rtSEXP);
     Rcpp::traits::input_parameter< double >::type rt_window(rt_windowSEXP);
     Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    rcpp_result_gen = Rcpp::wrap(build_sparse_graph_parallel(X, rt, rt_window, alpha));
+    Rcpp::traits::input_parameter< int >::type top_k(top_kSEXP);
+    rcpp_result_gen = Rcpp::wrap(build_sparse_graph_parallel(X, rt, rt_window, alpha, top_k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -87,7 +88,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_xMSannotator_run_ultra_annotation_engine", (DL_FUNC) &_xMSannotator_run_ultra_annotation_engine, 11},
-    {"_xMSannotator_build_sparse_graph_parallel", (DL_FUNC) &_xMSannotator_build_sparse_graph_parallel, 4},
+    {"_xMSannotator_build_sparse_graph_parallel", (DL_FUNC) &_xMSannotator_build_sparse_graph_parallel, 5},
     {"_xMSannotator_expand_isotopes_ultra_fast_cpp", (DL_FUNC) &_xMSannotator_expand_isotopes_ultra_fast_cpp, 13},
     {"_xMSannotator_stage3_score_engine_cpp", (DL_FUNC) &_xMSannotator_stage3_score_engine_cpp, 6},
     {NULL, NULL, 0}

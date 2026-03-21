@@ -303,7 +303,7 @@ function(
         if (use_ultra_clust) {
 
           #print("Running graph clustering")
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod=graphmethod,min_cluster_size=min_cluster_size,rt_window=2*max_diff_rt,alpha=corthresh))
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod=graphmethod,min_cluster_size=minclustsize,rt_window=2*max_diff_rt,alpha=corthresh))
 
           gc()
           save(levelA_res,dataA,corthresh,file="levelA_res.Rda")
@@ -1171,12 +1171,40 @@ function(
         ][order(-Confidence)]
       )
 
+     DT[, Formula_clean := sub("_\\[.*\\]$", "", Formula)]
 
+     formula_conf <- DT[
+       , list(
+         Confidence = if (all(is.na(Confidence))) NA_real_
+         else max(Confidence, na.rm = TRUE)
+       ),
+       by = Formula_clean
+     ]
+     cat("Stage 4 confidence distribution (unique formulas)\n")
+
+     print(
+       formula_conf[
+         , list(N = .N),
+         by = Confidence
+       ][order(-Confidence)]
+     )
       write.csv(annotresstage4$cluster_summary,file=file.path(outloc,"Stage4_cluster_summary.csv"),row.names=FALSE)
 
+      dt <- as.data.table(annotresstage4$conf_mat)
+      dt[, ISgroup := NULL]
 
-
-      write.csv(as.data.frame(annotresstage4$conf_mat),file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
+      setorder(dt, -Confidence, chemical_ID, mz, time, Module_RTclust)
+      dt[, ConfidenceCategory :=
+           fcase(
+             Confidence == 3, "High",
+             Confidence == 2, "Medium",
+             Confidence == 1, "Low",
+             is.na(Confidence), "NA",
+             default = "NA"
+           )
+      ]
+      df_sorted <- as.data.frame(dt)
+      write.csv(df_sorted,file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
 
 
 
