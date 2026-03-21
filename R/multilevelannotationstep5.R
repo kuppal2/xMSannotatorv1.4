@@ -34,7 +34,7 @@ function(outloc) {
   ), by = chemical_ID]
 
   setorder(summary, -max_confidence, -max_score)
-  chem_conf <- summary[
+  chem_conf <-DT[
     , list(Confidence = max(Confidence, na.rm = TRUE)),
     by = chemical_ID
   ]
