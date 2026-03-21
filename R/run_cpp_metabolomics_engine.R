@@ -29,7 +29,7 @@ function(dataA,
     from = as.character(res$from),
     to = as.character(res$to),
     weight = res$weight
-    save(edge=file="edges.Rda")
+
   )
   }else{
 
