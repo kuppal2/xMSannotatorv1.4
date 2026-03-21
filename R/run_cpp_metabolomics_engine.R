@@ -55,7 +55,7 @@ function(dataA,
 
   avg_deg <- mean(degree(g))
   #resolution <- 1 / avg_deg
-  resolution <- 1.0 / log1p(avg_deg)
+  resolution <- 0.05 #1.0 / log1p(avg_deg)
   ############################################################
   # Leiden clustering
   ############################################################
@@ -65,8 +65,8 @@ function(dataA,
 
    cl <- cluster_leiden(
     g,
-    weights = E(g)$weight,
-    resolution = resolution
+    weights = E(g)$weight
+    #resolution = resolution
   )
 
 
