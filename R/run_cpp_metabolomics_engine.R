@@ -30,7 +30,7 @@ function(dataA,
     to = as.character(res$to),
     weight = res$weight
     )
-  save(edge=file="edges.Rda")
+  save(edge,file="edges.Rda")
   }else{
 
     print("Running knn graph clustering...")
