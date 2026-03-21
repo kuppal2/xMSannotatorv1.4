@@ -76,8 +76,7 @@ function(stage3_results,
                               3L,
                               fifelse(
                                 has_primary &
-                                  best_score>=10 &
-                                  rt_valid,
+                                  best_score>=10,
                                 2L,
                                 1L
                               )))
