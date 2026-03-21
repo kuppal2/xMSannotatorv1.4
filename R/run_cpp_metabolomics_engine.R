@@ -19,8 +19,8 @@ function(dataA,
   res <- build_sparse_graph_parallel(
     X = X,
     rt = dataA$time,
-    rt_window = rt_window,
-    alpha = alpha,
+    rt_window = rt_window*2,
+    alpha = alpha^2,
     top_k=min_cluster_size
   )
 
@@ -68,7 +68,7 @@ function(dataA,
  # E(g)$weight <- pmax(E(g)$weight^2, 0)
   set.seed(555)
 
-   cl <- cluster_infomap(g, e.weights = E(g)$weight) #resolution = resolution
+   cl <- cluster_infomap(g, e.weights = (E(g)$weight)) #resolution = resolution
 
    #cl <- cluster_walktrap(g) #, weights = E(g)$weight, steps = 5)
 
