@@ -70,7 +70,7 @@ function(dataA,
 
    #cl <- cluster_infomap(g, e.weights = E(g)$weight) #resolution = resolution
 
-   cl <- cluster_walktrap(g, weights = E(g)$weight, steps = 2)
+   cl <- cluster_walktrap(g, weights = E(g)$weight, steps = 5)
 
   dataA[, Module_RTclust := as.character(membership(cl))]
 
