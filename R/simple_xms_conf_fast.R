@@ -98,7 +98,8 @@ function(stage3_results,
     all.x=TRUE
   )
 
-  if (!is.na(boostIDs) && length(boostIDs) > 0) {
+
+  if (length(boostIDs) > 0 && !all(is.na(boostIDs))) {
     curated_res[
       chemical_ID %in% boostIDs,
       Confidence := 4L
