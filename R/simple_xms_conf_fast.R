@@ -1,7 +1,7 @@
 simple_xms_conf_fast <-
 function(stage3_results,
                                  filter.by = "M+H",
-                                 max_diff_rt = 10){
+                                 max_diff_rt = 10,boostIDs=NA){
 
 
   DT <- as.data.table(stage3_results)
@@ -70,6 +70,7 @@ function(stage3_results,
                             fifelse(
                               n_adducts>=2 &
                                 has_primary &
+                                best_score>=10,
                                 rt_valid &
                                 multimer_valid &
                                 charge_valid,
@@ -97,6 +98,12 @@ function(stage3_results,
     all.x=TRUE
   )
 
+  if (!is.na(boostIDs) && length(boostIDs) > 0) {
+    curated_res[
+      chemical_ID %in% boostIDs,
+      Confidence := 4L
+    ]
+  }
   ############################################################
   # 4️⃣ REPORTING
   ############################################################
