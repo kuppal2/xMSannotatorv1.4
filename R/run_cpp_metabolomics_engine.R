@@ -228,7 +228,7 @@ run_cpp_metabolomics_engine <- function(
     dataA <- merge_close_modules(
       dataA          = dataA,
       X              = X,
-      cut_height     = merge_cut_height,
+      cut_height     = 0.2,
       min_module_size = min_module_size,
       verbose        = TRUE
     )
