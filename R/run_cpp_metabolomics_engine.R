@@ -1,6 +1,6 @@
 run_cpp_metabolomics_engine <- function(
     dataA,
-    rt_window       = 1000,
+    rt_window       = 10,
     alpha           = 0.70,
     top_k           = 100,
     soft_power      = 6,
