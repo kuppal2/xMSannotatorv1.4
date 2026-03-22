@@ -13,6 +13,13 @@ function(stage3_results,
     mean_int_vec = as.numeric(mean_int_vec)
   )]
 
+  if(!"pathway_boosted" %in% names(DT)){
+    DT[, pathway_boosted := FALSE]
+  } else {
+    # Coerce to logical in case fread read it as integer (0/1)
+    DT[, pathway_boosted := as.logical(pathway_boosted)]
+    DT[is.na(pathway_boosted), pathway_boosted := FALSE]
+  }
   ############################################################
   # 1️⃣ CLUSTER SUMMARY
   ############################################################

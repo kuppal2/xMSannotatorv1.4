@@ -29,6 +29,8 @@ multilevelannotationstep3 <-
     hmdbbad <- c("HMDB29244", "HMDB29245", "HMDB29246")
     DT <- DT[!chemical_ID %in% hmdbbad]
 
+    DT[, pathway_boosted := FALSE]
+
     DT[, module_num := sub("_[0-9]*", "", Module_RTclust)]
 
     primary_adducts <- as.character(adduct_weights[, 1])
