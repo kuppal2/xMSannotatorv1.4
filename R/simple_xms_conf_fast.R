@@ -29,7 +29,8 @@ function(stage3_results,
         has_primary     = FALSE,
         rt_range        = Inf,
         multimer_valid  = FALSE,
-        charge_valid    = FALSE
+        charge_valid    = FALSE,
+        pathway_boosted = FALSE
       )
 
     } else {
