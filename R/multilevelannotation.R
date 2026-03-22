@@ -1157,7 +1157,7 @@ function(
       print("Status 5: Assigning confidence levels")
       stage3_csv <- file.path(outloc, "Stage3B.csv")
       annotresstage3<- data.table::fread(stage3_csv, data.table=FALSE)
-      annotresstage4<-simple_xms_conf_fast(stage3_results=annotresstage3)
+      annotresstage4<-simple_xms_conf_fast(stage3_results=annotresstage3,filter.by=filter.by,max_diff_rt = max_diff_rt,boostIDs=boostIDs)
 
       DT <- data.table::as.data.table(annotresstage4$conf_mat)
 
