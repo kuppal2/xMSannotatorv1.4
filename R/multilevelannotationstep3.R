@@ -175,8 +175,6 @@ multilevelannotationstep3 <-
 
       boost_chems <- run_pathway_enrichment(hmdb_map)
 
-      message("Boost chems:")
-      print(boost_chems)
 
       .do_boost(boost_chems, label = "HMDB")
     }
