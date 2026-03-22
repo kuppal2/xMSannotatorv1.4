@@ -14,11 +14,30 @@ run_cpp_metabolomics_engine <- function(
   setorder(dataA, time)
   X <- as.matrix(dataA[, -(1:2)])
 
-  # Remove zero-variance features before anything else
+
+  # Clean X before variance check
+  X[is.na(X)]      <- 0
+  X[!is.finite(X)] <- 0
+
   row_vars <- apply(X, 1, var)
-  keep     <- row_vars > 1e-10
-  if(sum(!keep) > 0)
+  keep     <- !is.na(row_vars) & row_vars > 1e-10
+
+  if(any(!keep)){
     message("Removing ", sum(!keep), " zero-variance features")
+  }
+  X     <- X[keep, ]
+  dataA <- dataA[keep, ]
+  # AFTER — three-part keep condition:
+  #   1. variance is not NA
+  #   2. variance is above threshold
+  #   3. no infinite values in the row
+  row_vars <- apply(X, 1, var, na.rm = TRUE)
+  keep     <- !is.na(row_vars) & row_vars > 1e-10 & apply(X, 1, function(r) all(is.finite(r)))
+
+  if(any(!keep)){
+    message("Removing ", sum(!keep), " zero-variance or non-finite features")
+  }
+
   X     <- X[keep, ]
   dataA <- dataA[keep, ]
 
