@@ -128,7 +128,7 @@ multilevelannotationstep3 <-
       n_rows      <- sum(boost_rows)
       n_rows_zero <- sum(DT$chemical_ID %in% boost_chems & DT$score <= 0)
 
-      DT[boost_rows, score := score + 10]
+      #DT[boost_rows, score := score + 10]
 
       message(sprintf(
         "[%s] Pathway boost: %d unique chemical_IDs | %d rows updated | %d rows skipped (score=0).",
