@@ -77,7 +77,7 @@ function(stage3_results,
                               3L,
                               fifelse(
                                 has_primary &
-                                  best_score>=10,
+                                  best_score==9999.9,
                                 2L,
                                 fifelse(
                                   n_adducts>=2 &
