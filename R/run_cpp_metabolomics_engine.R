@@ -167,6 +167,7 @@ run_cpp_metabolomics_engine <- function(
   X <- scale(X, center=TRUE, scale=FALSE)
   n <- nrow(X)
 
+  set.seed(555)
   # ── Step 1: C++ sparse graph ─────────────────────────
   message("Building sparse graph...")
   res <- build_sparse_graph_parallel(
@@ -202,10 +203,12 @@ run_cpp_metabolomics_engine <- function(
       vertices = data.frame(name = seq_len(n))
     )
     g  <- igraph::simplify(g, edge.attr.comb="max")
+    set.seed(555)
     cl <- igraph::cluster_infomap(g, e.weights=igraph::E(g)$weight)
     modules <- igraph::membership(cl)
 
   } else {
+    set.seed(555)
     # Fallback: pure C++ greedy modularity
     modules <- cluster_sparse_greedy(
       from    = as.integer(from_k),
