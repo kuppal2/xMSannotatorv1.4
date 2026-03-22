@@ -101,44 +101,29 @@ multilevelannotationstep3 <-
     }
 
     ########################################################
-    # -------------- APPLY BOOST --------------------------
-    # FIX: only boost rows that already have score > 0.
-    #
-    # The old code did:
-    #   DT[chemical_ID %in% boost_chems, score := score + 10]
-    # which boosted ALL rows for a chemical, including rows
-    # with score = 0 (no adduct match, no mass evidence).
-    # A feature with zero evidence should never be elevated
-    # purely because a different annotation of the same m/z
-    # appears in an enriched pathway.
-    #
-    # The fix restricts the boost to rows where score > 0,
-    # i.e. rows that already have independent mass-spectral
-    # evidence. The pathway enrichment then acts as a
-    # tie-breaker / confidence lifter, not a creator of
-    # evidence from nothing.
+    # -------------- INLINE BOOST HELPER ------------------
+    # Do NOT wrap this in a function that takes DT as a
+    # parameter. Passing DT as a formal argument creates a
+    # local binding that shadows the outer DT, breaking
+    # data.table's by-reference := semantics. Inlining
+    # directly guarantees := operates on the correct object.
     ########################################################
 
-    apply_pathway_boost <- function(DT, boost_chems, label = "") {
-
+    .do_boost <- function(boost_chems, label) {
       if (is.null(boost_chems) || length(boost_chems) == 0) {
-        message(sprintf("[%s] No chemicals boosted during pathway evaluation.",
-                        label))
+        message(sprintf("[%s] No chemicals boosted during pathway evaluation.", label))
         return(invisible(NULL))
       }
-
-      # FIX: restrict to rows with existing mass-spectral evidence
-      boost_rows <- DT$chemical_ID %in% boost_chems & DT$score > 0
-
+      # DT is accessed via lexical scoping — NOT passed as a parameter.
+      boost_rows  <- DT$chemical_ID %in% boost_chems & DT$score > 0
       n_ids       <- length(unique(boost_chems))
       n_rows      <- sum(boost_rows)
       n_rows_zero <- sum(DT$chemical_ID %in% boost_chems & DT$score <= 0)
-
-      DT[boost_rows, pathway_boosted := TRUE]
-
+      set(DT, i = which(boost_rows), j = "pathway_boosted", value = TRUE)
+      n_confirmed <- sum(DT$pathway_boosted, na.rm = TRUE)
       message(sprintf(
-        "[%s] Pathway boost: %d unique chemical_IDs | %d rows flagged | %d rows skipped (score=0).",
-        label, n_ids, n_rows, n_rows_zero
+        "[%s] Pathway boost: %d chemical_IDs | %d rows flagged | %d skipped (score=0) | %d TRUE in DT.",
+        label, n_ids, n_rows, n_rows_zero, n_confirmed
       ))
     }
 
@@ -162,7 +147,7 @@ multilevelannotationstep3 <-
       kegg_map <- kegg_map[pathway != "-" & pathway != "map01100"]
 
       boost_chems <- run_pathway_enrichment(kegg_map)
-      apply_pathway_boost(DT, boost_chems, label = "KEGG")
+      .do_boost(boost_chems, label = "KEGG")
     }
 
     ########################################################
@@ -193,7 +178,7 @@ multilevelannotationstep3 <-
       message("Boost chems:")
       print(boost_chems)
 
-      apply_pathway_boost(DT, boost_chems, label = "HMDB")
+      .do_boost(boost_chems, label = "HMDB")
     }
 
     ########################################################
