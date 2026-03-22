@@ -21,7 +21,7 @@ function(dataA,
     rt = dataA$time,
     rt_window = rt_window,
     alpha = alpha,
-    top_k=min_cluster_size
+    top_k=nrow(X)
   )
 
 
