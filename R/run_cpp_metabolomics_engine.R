@@ -222,7 +222,7 @@ run_cpp_metabolomics_engine <- function(
   modules[modules %in% tiny] <- 0L
 
   dataA[, Module_RTclust := as.character(modules)]
-
+  merge_cut_height=0.2
   # ── Merge close modules ← THE MISSING STEP ────────────────
   if(merge_cut_height > 0){
     dataA <- merge_close_modules(
