@@ -71,7 +71,7 @@ run_cpp_metabolomics_engine <- function(
   # shared neighbor score between i and j
   # TOM_ij = (adj_ij + shared_neighbors) / (min(degree_i, degree_j) + 1 - adj_ij)
   # For large datasets skip this and use adj directly
-  use_tom <- n < 5000
+  use_tom <- TRUE #n < 5000
   if(use_tom){
     message("Computing sparse TOM approximation...")
     # Shared neighbor count via matrix product
