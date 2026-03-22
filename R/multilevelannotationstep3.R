@@ -188,8 +188,7 @@ multilevelannotationstep3 <-
 
       boost_chems <- run_pathway_enrichment(hmdb_map)
 
-      message("Boost chems:")
-      print(boost_chems)
+
       # Before the KEGG / HMDB boost calls
       DT[, pathway_boosted := FALSE]
 
