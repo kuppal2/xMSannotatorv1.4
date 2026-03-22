@@ -78,8 +78,12 @@ function(stage3_results,
                                 has_primary &
                                   best_score>=10,
                                 2L,
-                                1L
-                              )))
+                                fifelse(
+                                  n_adducts>=2 &
+                                    best_score>0,
+                                  1L,
+                                0L
+                              ))))
   ]
 
   ############################################################
