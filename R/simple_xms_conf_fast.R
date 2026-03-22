@@ -70,7 +70,7 @@ function(stage3_results,
                             fifelse(
                               n_adducts>=2 &
                                 has_primary &
-                                best_score>=10,
+                                best_score>=10 &
                                 rt_valid &
                                 multimer_valid &
                                 charge_valid,
