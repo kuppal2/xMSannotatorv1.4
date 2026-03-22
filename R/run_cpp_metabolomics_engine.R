@@ -1,8 +1,8 @@
 run_cpp_metabolomics_engine <- function(
     dataA,
-    rt_window       = 10,
+    rt_window       = 1000,
     alpha           = 0.70,
-    top_k           = 15,
+    top_k           = 100,
     soft_power      = 6,
     min_module_size = 10,
     use_igraph_infomap = FALSE   # TRUE = igraph (better), FALSE = C++ greedy
