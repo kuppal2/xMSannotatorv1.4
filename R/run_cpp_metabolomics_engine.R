@@ -5,7 +5,7 @@ run_cpp_metabolomics_engine <- function(
     top_k           = 100,
     soft_power      = 6,
     min_module_size = 10,
-    use_igraph_infomap = FALSE   # TRUE = igraph (better), FALSE = C++ greedy
+    use_igraph_infomap = TRUE   # TRUE = igraph (better), FALSE = C++ greedy
 ) {
   library(data.table)
   library(igraph)
