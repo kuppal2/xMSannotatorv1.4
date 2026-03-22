@@ -3,7 +3,7 @@ run_cpp_metabolomics_engine <- function(
     rt_window       = 1000,
     alpha           = 0.70,
     top_k           = 100,
-    soft_power      = 8,
+    soft_power      = 12,
     min_module_size = 10,
     use_igraph_infomap = TRUE   # TRUE = igraph (better), FALSE = C++ greedy
 ) {
