@@ -1195,20 +1195,34 @@ function(
       write.csv(annotresstage4$cluster_summary,file=file.path(outloc,"Stage4_cluster_summary.csv"),row.names=FALSE)
 
       dt <- as.data.table(annotresstage4$conf_mat)
+
+      # clean
       dt[, ISgroup := NULL]
 
-      setorder(dt, -Confidence, chemical_ID, mz, time, Module_RTclust)
-      dt[, ConfidenceCategory :=
-           fcase(
-             Confidence == 3, "High",
-             Confidence == 2, "Medium",
-             Confidence == 1, "Low",
-             is.na(Confidence), "NA",
-             default = "NA"
-           )
-      ]
-      df_sorted <- as.data.frame(dt)
-      write.csv(df_sorted,file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
+      # enforce types
+      dt[, `:=`(
+        Confidence = as.integer(Confidence),
+        mz = as.numeric(mz),
+        time = as.numeric(time)
+      )]
+
+      # handle NA explicitly
+      dt[, Confidence := fifelse(is.na(Confidence), -1L, Confidence)]
+
+      # sort
+      setorder(dt, -Confidence, chemical_ID, Module_RTclust, mz, time)
+
+      # add category AFTER sort
+      dt[, ConfidenceCategory := fcase(
+        Confidence == 4, "Confirmed",
+        Confidence == 3, "High",
+        Confidence == 2, "Medium",
+        Confidence == 1, "Low",
+        TRUE, "NA"
+      )]
+
+      # write
+      fwrite(dt, file.path(outloc, "Stage4.csv"))
 
 
 
@@ -1293,17 +1307,62 @@ function(
     stage3a<-fread(file.path(outloc,"Stage3A.csv"))
 
     annotresstage3A<-merge(peakID_mz_time, stage3a,by=c("mz","time"))
-    write.csv(annotresstage3A,file="Stage3A.csv",row.names=FALSE)
+
+    dt <- as.data.table(annotresstage3A)
+    # sort
+    setorder(dt, -score, chemical_ID, Module_RTclust, mz, time)
+
+    # write
+    fwrite(dt, file.path(outloc, "Stage3A.csv"))
+
+    #write.csv(annotresstage3A,file="Stage3A.csv",row.names=FALSE)
 
     stage3b<-fread(file.path(outloc,"Stage3B.csv"))
 
+
     annotresstage3B<-merge(peakID_mz_time, stage3b,by=c("mz","time"))
-    write.csv(annotresstage3B,file=file.path(outloc,"Stage3B.csv"),row.names=FALSE)
+    dt <- as.data.table(annotresstage3B)
+    # sort
+    setorder(dt, -score, chemical_ID, Module_RTclust, mz, time)
+
+    # write
+    fwrite(dt, file.path(outloc, "Stage3B.csv"))
+    #write.csv(annotresstage3B,file=file.path(outloc,"Stage3B.csv"),row.names=FALSE)
 
     stage4<-fread(file.path(outloc,"Stage4.csv"))
 
     annotresstage4<-merge(peakID_mz_time, stage4,by=c("mz","time"))
-    write.csv(annotresstage4,file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
+
+    dt <- as.data.table(annotresstage4)
+
+    # clean
+    dt[, ISgroup := NULL]
+
+    # enforce types
+    dt[, `:=`(
+      Confidence = as.integer(Confidence),
+      mz = as.numeric(mz),
+      time = as.numeric(time)
+    )]
+
+    # handle NA explicitly
+    dt[, Confidence := fifelse(is.na(Confidence), -1L, Confidence)]
+
+    # sort
+    setorder(dt, -Confidence, chemical_ID, Module_RTclust, mz, time)
+
+    # add category AFTER sort
+    dt[, ConfidenceCategory := fcase(
+      Confidence == 4, "Confirmed",
+      Confidence == 3, "High",
+      Confidence == 2, "Medium",
+      Confidence == 1, "Low",
+      TRUE, "NA"
+    )]
+
+    # write
+    fwrite(dt, file.path(outloc, "Stage4.csv"))
+    #write.csv(annotresstage4,file=file.path(outloc,"Stage4.csv"),row.names=FALSE)
 
     stage5<-fread(file.path(outloc,"Stage5.csv"))
 
