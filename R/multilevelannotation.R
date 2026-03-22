@@ -1218,7 +1218,7 @@ function(
         Confidence == 3, "High",
         Confidence == 2, "Medium",
         Confidence == 1, "Low",
-        TRUE, "NA"
+        default = "NA/Level 5 Schymanski"      # ← named default= argument, no length constraint
       )]
 
       # write
@@ -1357,7 +1357,7 @@ function(
       Confidence == 3, "High",
       Confidence == 2, "Medium",
       Confidence == 1, "Low",
-      TRUE, "NA"
+      default = "NA/Level 5 Schymanski"      # ← named default= argument, no length constraint
     )]
 
     # write
