@@ -46,6 +46,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// compute_sparse_tom
+NumericVector compute_sparse_tom(IntegerVector from, IntegerVector to, NumericVector weight, int n);
+RcppExport SEXP _xMSannotator_compute_sparse_tom(SEXP fromSEXP, SEXP toSEXP, SEXP weightSEXP, SEXP nSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type to(toSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    rcpp_result_gen = Rcpp::wrap(compute_sparse_tom(from, to, weight, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// cluster_sparse_greedy
+IntegerVector cluster_sparse_greedy(IntegerVector from, IntegerVector to, NumericVector weight, int n, int max_iter);
+RcppExport SEXP _xMSannotator_cluster_sparse_greedy(SEXP fromSEXP, SEXP toSEXP, SEXP weightSEXP, SEXP nSEXP, SEXP max_iterSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type from(fromSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type to(toSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type max_iter(max_iterSEXP);
+    rcpp_result_gen = Rcpp::wrap(cluster_sparse_greedy(from, to, weight, n, max_iter));
+    return rcpp_result_gen;
+END_RCPP
+}
 // expand_isotopes_ultra_fast_cpp
 DataFrame expand_isotopes_ultra_fast_cpp(NumericVector mz, NumericVector time, NumericVector mono_mz, IntegerVector module_id, IntegerVector group_start, IntegerVector group_end, NumericVector isp_mz, NumericVector isp_time, IntegerVector isp_module, CharacterVector formula, double max_diff_rt, int max_isp, double ppm_tol);
 RcppExport SEXP _xMSannotator_expand_isotopes_ultra_fast_cpp(SEXP mzSEXP, SEXP timeSEXP, SEXP mono_mzSEXP, SEXP module_idSEXP, SEXP group_startSEXP, SEXP group_endSEXP, SEXP isp_mzSEXP, SEXP isp_timeSEXP, SEXP isp_moduleSEXP, SEXP formulaSEXP, SEXP max_diff_rtSEXP, SEXP max_ispSEXP, SEXP ppm_tolSEXP) {
@@ -89,6 +118,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_xMSannotator_run_ultra_annotation_engine", (DL_FUNC) &_xMSannotator_run_ultra_annotation_engine, 11},
     {"_xMSannotator_build_sparse_graph_parallel", (DL_FUNC) &_xMSannotator_build_sparse_graph_parallel, 5},
+    {"_xMSannotator_compute_sparse_tom", (DL_FUNC) &_xMSannotator_compute_sparse_tom, 4},
+    {"_xMSannotator_cluster_sparse_greedy", (DL_FUNC) &_xMSannotator_cluster_sparse_greedy, 5},
     {"_xMSannotator_expand_isotopes_ultra_fast_cpp", (DL_FUNC) &_xMSannotator_expand_isotopes_ultra_fast_cpp, 13},
     {"_xMSannotator_stage3_score_engine_cpp", (DL_FUNC) &_xMSannotator_stage3_score_engine_cpp, 6},
     {NULL, NULL, 0}

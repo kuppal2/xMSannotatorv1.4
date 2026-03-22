@@ -5,8 +5,16 @@ run_ultra_annotation_engine <- function(data_mz, data_time, db_mz_R, db_id_R, db
     .Call(`_xMSannotator_run_ultra_annotation_engine`, data_mz, data_time, db_mz_R, db_id_R, db_name_R, db_formula_R, db_mono_mass_R, db_adduct_R, db_adduct_mass_R, query_adducts, ppm_tol)
 }
 
-build_sparse_graph_parallel <- function(X, rt, rt_window, alpha, top_k = 15L) {
+build_sparse_graph_parallel <- function(X, rt, rt_window, alpha = 0.70, top_k = 15L) {
     .Call(`_xMSannotator_build_sparse_graph_parallel`, X, rt, rt_window, alpha, top_k)
+}
+
+compute_sparse_tom <- function(from, to, weight, n) {
+    .Call(`_xMSannotator_compute_sparse_tom`, from, to, weight, n)
+}
+
+cluster_sparse_greedy <- function(from, to, weight, n, max_iter = 20L) {
+    .Call(`_xMSannotator_cluster_sparse_greedy`, from, to, weight, n, max_iter)
 }
 
 expand_isotopes_ultra_fast_cpp <- function(mz, time, mono_mz, module_id, group_start, group_end, isp_mz, isp_time, isp_module, formula, max_diff_rt, max_isp, ppm_tol) {
