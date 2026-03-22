@@ -303,8 +303,8 @@ function(
 
         if (use_ultra_clust) {
 
-          #print("Running graph clustering")graphmethod=graphmethod
-          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,top_k=min_module_size*2,min_module_size=minclustsize,rt_window=max_diff_rt,alpha=corthresh))
+          #print("Running graph clustering")
+          levelA_res <- suppressWarnings(run_cpp_metabolomics_engine(dataA,graphmethod=graphmethod,min_cluster_size=minclustsize,rt_window=2*max_diff_rt,alpha=corthresh))
 
           gc()
           save(levelA_res,dataA,corthresh,file="levelA_res.Rda")

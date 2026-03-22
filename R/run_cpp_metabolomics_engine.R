@@ -1,79 +1,102 @@
-run_cpp_metabolomics_engine <-
-function(dataA,
-                                        rt_window = 10,
-                                        alpha = 0.7,graphmethod="sparsegraph",min_cluster_size=10) {
-
+run_cpp_metabolomics_engine <- function(
+    dataA,
+    rt_window       = 10,
+    alpha           = 0.7,
+    top_k           = 20,
+    min_module_size = 10,
+    soft_power      = 2      # additional soft threshold on top of C++ r^2
+) {
   library(data.table)
   library(igraph)
-
+  library(dynamicTreeCut)
 
   setDT(dataA)
   setorder(dataA, time)
-
   X <- as.matrix(dataA[, -(1:2)])
+
+  # Remove zero-variance features before anything else
+  row_vars <- apply(X, 1, var)
+  keep     <- row_vars > 1e-10
+  if(sum(!keep) > 0)
+    message("Removing ", sum(!keep), " zero-variance features")
+  X     <- X[keep, ]
+  dataA <- dataA[keep, ]
+
   X <- scale(X, center = TRUE, scale = FALSE)
 
-  if(graphmethod=="sparsegraph"){
-    print("Running sparse graph clustering...")
-  #calls the C++ sparse graph builder; alpha is the correlation threshold
+  # ── Build sparse adjacency ──────────────────────────────────────────────────
   res <- build_sparse_graph_parallel(
-    X = X,
-    rt = dataA$time,
+    X         = X,
+    rt        = dataA$time,
     rt_window = rt_window,
-    alpha = alpha,
-    top_k=min_cluster_size
+    alpha     = alpha,
+    top_k     = top_k
   )
 
-
-  edges <- data.table(
-    from = as.character(res$from),
-    to = as.character(res$to),
-    weight = res$weight
-    )
-
-  }else{
-
-    print("Running knn graph clustering...")
-    # Replace non-finite values
-    X[is.na(X)] <- 0
-    X[!is.finite(X)] <- 0  # also catch Inf/-Inf
-
-    nn <- nn2(X, k = min_cluster_size)
-
-    edges <- data.frame(
-      from   = as.character(rep(1:nrow(X), each = min_cluster_size)),
-      to     = as.character(as.vector(nn$nn.idx)),
-      weight = 1 / (1 + as.vector(nn$nn.dists))  # convert distance → similarity
-    )
-}
-  g <- graph_from_data_frame(
-    edges,
-    directed = FALSE,
-    vertices = data.frame(name = as.character(seq_len(nrow(dataA))))
+  # ── Convert to symmetric adjacency matrix ──────────────────────────────────
+  # WGCNA works on a full symmetric matrix — we approximate TOM by
+  # symmetrising: w_ij = max(w_ij, w_ji) so mutual edges get full weight
+  n <- nrow(X)
+  adj <- Matrix::sparseMatrix(
+    i    = res$from,
+    j    = res$to,
+    x    = res$weight^soft_power,   # additional soft thresholding
+    dims = c(n, n),
+    symmetric = FALSE
   )
-  save(g,file="g.Rda")
- # g <- simplify(g, edge.attr.comb = "mean")
+  # Symmetrise
+  adj <- pmax(adj, Matrix::t(adj))
 
-  avg_deg <- mean(degree(g))
-  #resolution <- 1 / avg_deg
-  resolution <- 0.05 #1.0 / log1p(avg_deg)
-  ############################################################
-  # Leiden clustering
-  ############################################################
-  Sys.setenv(OMP_NUM_THREADS = 1)
-  # Remove NaN/NA/Inf edges
-  bad_edges <- which(is.nan(E(g)$weight) | is.na(E(g)$weight) | !is.finite(E(g)$weight))
-  #cat("Removing", length(bad_edges), "bad edges\n")
-  g <- delete_edges(g, bad_edges)
+  # ── TOM-like similarity (optional but improves biological relevance) ────────
+  # Full TOM is O(n^3) — this is a sparse approximation:
+  # shared neighbor score between i and j
+  # TOM_ij = (adj_ij + shared_neighbors) / (min(degree_i, degree_j) + 1 - adj_ij)
+  # For large datasets skip this and use adj directly
+  use_tom <- n < 5000
+  if(use_tom){
+    message("Computing sparse TOM approximation...")
+    # Shared neighbor count via matrix product
+    shared <- as.matrix(adj %*% adj)
+    deg    <- Matrix::rowSums(adj)
+    tom    <- matrix(0, n, n)
+    for(i in 1:n){
+      for(j in i:n){
+        if(adj[i,j] == 0 && shared[i,j] == 0) next
+        denom      <- min(deg[i], deg[j]) - adj[i,j] + 1
+        tom[i,j]   <- (adj[i,j] + shared[i,j]) / denom
+        tom[j,i]   <- tom[i,j]
+      }
+    }
+    dissim <- 1 - tom
+  } else {
+    message("Skipping TOM (n > 5000), using correlation distance directly")
+    dissim <- 1 - as.matrix(adj)
+  }
 
- # E(g)$weight <- pmax(E(g)$weight^2, 0)
-  set.seed(555)
+  # ── Hierarchical clustering + dynamic tree cut ─────────────────────────────
+  # This is the WGCNA approach — no resolution parameter needed
+  hc <- hclust(as.dist(dissim), method = "average")
 
-  cl <- cluster_infomap(g, e.weights = (E(g)$weight)) #resolution = resolution
+  modules <- dynamicTreeCut::cutreeDynamic(
+    dendro        = hc,
+    distM         = dissim,
+    deepSplit     = 2,          # 0-4: higher = more/smaller modules
+    minClusterSize = min_module_size,
+    method        = "hybrid"    # uses both tree shape and distance matrix
+  )
 
-   #cl <- cluster_walktrap(g,steps=30) #, weights = E(g)$weight, steps = 5)
+  # Module 0 = unassigned — label them individually
+  modules[modules == 0] <- max(modules) + seq_len(sum(modules == 0))
 
-  dataA[, Module_RTclust := as.character(membership(cl))]
+  dataA[, Module_RTclust := as.character(modules)]
+
+  message(sprintf(
+    "Found %d modules | median size: %.0f | range: %d–%d",
+    length(unique(modules)),
+    median(table(modules)),
+    min(table(modules)),
+    max(table(modules))
+  ))
 
   return(dataA[, .(mz, time, Module_RTclust)])
 }
