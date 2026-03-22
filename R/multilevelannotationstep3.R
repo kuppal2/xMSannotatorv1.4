@@ -29,6 +29,10 @@ multilevelannotationstep3 <-
     hmdbbad <- c("HMDB29244", "HMDB29245", "HMDB29246")
     DT <- DT[!chemical_ID %in% hmdbbad]
 
+    # Always initialise pathway_boosted so the column exists in Stage3B.csv
+    # even when no pathway enrichment runs or no chemicals are boosted.
+    # simple_xms_conf_fast reads this column from Stage3B.csv — if it is
+    # missing the function crashes with "object 'pathway_boosted' not found".
     DT[, pathway_boosted := FALSE]
 
     DT[, module_num := sub("_[0-9]*", "", Module_RTclust)]
@@ -130,10 +134,10 @@ multilevelannotationstep3 <-
       n_rows      <- sum(boost_rows)
       n_rows_zero <- sum(DT$chemical_ID %in% boost_chems & DT$score <= 0)
 
-      #DT[boost_rows, score := 9999.9]
       DT[boost_rows, pathway_boosted := TRUE]
+
       message(sprintf(
-        "[%s] Pathway boost: %d unique chemical_IDs | %d rows updated | %d rows skipped (score=0).",
+        "[%s] Pathway boost: %d unique chemical_IDs | %d rows flagged | %d rows skipped (score=0).",
         label, n_ids, n_rows, n_rows_zero
       ))
     }
@@ -158,8 +162,6 @@ multilevelannotationstep3 <-
       kegg_map <- kegg_map[pathway != "-" & pathway != "map01100"]
 
       boost_chems <- run_pathway_enrichment(kegg_map)
-      # Before the KEGG / HMDB boost calls
-      DT[, pathway_boosted := FALSE]
       apply_pathway_boost(DT, boost_chems, label = "KEGG")
     }
 
@@ -188,9 +190,8 @@ multilevelannotationstep3 <-
 
       boost_chems <- run_pathway_enrichment(hmdb_map)
 
-
-      # Before the KEGG / HMDB boost calls
-      DT[, pathway_boosted := FALSE]
+      message("Boost chems:")
+      print(boost_chems)
 
       apply_pathway_boost(DT, boost_chems, label = "HMDB")
     }
@@ -229,7 +230,8 @@ multilevelannotationstep3 <-
       "mz", "time", "MatchCategory",
       "theoretical.mz", "Name", "Formula",
       "MonoisotopicMass", "Adduct", "ISgroup",
-      "mean_int_vec", "MD"
+      "mean_int_vec", "MD",
+      "pathway_boosted"   # must be here so simple_xms_conf_fast can read it
     )
 
     avail_cols <- intersect(core_cols, names(DT))
