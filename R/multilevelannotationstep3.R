@@ -128,8 +128,8 @@ multilevelannotationstep3 <-
       n_rows      <- sum(boost_rows)
       n_rows_zero <- sum(DT$chemical_ID %in% boost_chems & DT$score <= 0)
 
-      DT[boost_rows, score := 9999.9]
-
+      #DT[boost_rows, score := 9999.9]
+      DT[boost_rows, pathway_boosted := TRUE]
       message(sprintf(
         "[%s] Pathway boost: %d unique chemical_IDs | %d rows updated | %d rows skipped (score=0).",
         label, n_ids, n_rows, n_rows_zero
@@ -156,6 +156,8 @@ multilevelannotationstep3 <-
       kegg_map <- kegg_map[pathway != "-" & pathway != "map01100"]
 
       boost_chems <- run_pathway_enrichment(kegg_map)
+      # Before the KEGG / HMDB boost calls
+      DT[, pathway_boosted := FALSE]
       apply_pathway_boost(DT, boost_chems, label = "KEGG")
     }
 
@@ -186,6 +188,8 @@ multilevelannotationstep3 <-
 
       message("Boost chems:")
       print(boost_chems)
+      # Before the KEGG / HMDB boost calls
+      DT[, pathway_boosted := FALSE]
 
       apply_pathway_boost(DT, boost_chems, label = "HMDB")
     }

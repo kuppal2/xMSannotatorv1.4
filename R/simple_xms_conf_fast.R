@@ -53,7 +53,8 @@ function(stage3_results,
         has_primary     = any(Adduct[valid] %in% filter.by),
         rt_range        = IQR(time[valid]),
         multimer_valid  = is.na(multi_int) | multi_int <= mono_int,
-        charge_valid    = charge_valid
+        charge_valid    = charge_valid,
+        pathway_boosted  = any(pathway_boosted, na.rm = TRUE)   # ← new
       )
     }
 
@@ -77,7 +78,8 @@ function(stage3_results,
                               3L,
                               fifelse(
                                 has_primary &
-                                  best_score==9999.9,
+                                  best_score>0 &
+                                  pathway_boosted,
                                 2L,
                                 fifelse(
                                   n_adducts>=2 &
